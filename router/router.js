@@ -1,6 +1,7 @@
 import {DispatchError, RouterError} from "../exceptions";
 import {default as crossroads} from "crossroads";
-import {createHistory as createBrowserHistory, useBasename, createMemoryHistory} from "history";
+import {default as createMemoryHistory} from "history/createMemoryHistory";
+import {default as createBrowserHistory} from "history/createBrowserHistory";
 import {Route} from "./route";
 
 /**
@@ -261,14 +262,10 @@ export class Router {
         }
         switch(options.history){
             case 'browser':
-                this._history = useBasename(createBrowserHistory)({
-                    //basename: this._basename
-                });
+                this._history = createBrowserHistory();
                 break;
             case 'server':
-                this._history = useBasename(createMemoryHistory)({
-                    //basename: this._basename
-                });
+                this._history = createMemoryHistory();
                 break;
             default:
                 this._history = history;
@@ -383,13 +380,15 @@ export class Router {
      *
      *      router.start(path)
      *
-     * Alternatively, you can setup a custom history which defines getCurrentLocation() for server side use.
+     * Alternatively, you can setup a custom history which defines location() for server side use.
      *
      * In the browser. You will have typically setup a history object.
      * The default is browserHistory.
      *
      * In this case, it will automatically pick up the current pathname+search from the history object
      * Since the history object abstracts away the usage of hashes vs HTML5 path state, this is a safe option.
+     *
+     * Todo: rewrite above for History 4.0.0 which uses location instead of getCurrentLocation
      *
      * @param {string} [start_url] - optional location to begin operating upon
      */
@@ -402,8 +401,8 @@ export class Router {
         // Get the current location from our history object
         // Default MemoryHistory doesn't have a getCurrentLocation so you'd need to pass url directly
         let url = start_url;
-        if (!start_url && (this.history && this.history.getCurrentLocation)) {
-            location = this.history.getCurrentLocation();
+        if (!start_url && (this.history && this.history.location)) {
+            location = this.history.location();
             url = location.pathname + location.search;
         }
 
