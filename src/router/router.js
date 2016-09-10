@@ -1,6 +1,6 @@
 import {DispatchError, RouterError} from "../exceptions";
 import {default as crossroads} from "crossroads";
-import {createHistory as createBrowserHistory, useBasename, createMemoryHistory} from "history/es6/index";
+import {createHistory as createBrowserHistory, useBasename, createMemoryHistory} from "history";
 import {Route} from "./route";
 
 /**
