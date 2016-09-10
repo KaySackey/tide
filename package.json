@@ -1,6 +1,6 @@
 {
   "name": "tide",
-  "version": "1.0.0-dev.11",
+  "version": "1.0.0-dev.13",
   "registry": "github",
   "description": "Tide is a Model-View-Presenter framework for quickly building client-side applications with React and MobX.",
   "main": "index.js",
