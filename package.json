@@ -1,12 +1,19 @@
 {
   "name": "tide",
-  "version": "dev",
+  "version": "1.0.0-dev.10",
   "registry": "github",
   "description": "Tide is a Model-View-Presenter framework for quickly building client-side applications with React and MobX.",
   "main": "src/index.js",
+  "web": "src/index.js",
+  "bin": "src/index.js",
   "author": "Kay Sackey",
   "license": "MIT",
   "private": false,
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/KaySackey/tide.git"
+  },
+  "homepage": "https://github.com/KaySackey/tide",
   "babel": {
     "env": {
       "development": {
