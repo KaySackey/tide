@@ -380,7 +380,7 @@ export class Router {
      *
      *      router.start(path)
      *
-     * Alternatively, you can setup a custom history which defines location() for server side use.
+     * Alternatively, you can setup a custom history which defines location for server side use.
      *
      * In the browser. You will have typically setup a history object.
      * The default is browserHistory.
@@ -402,7 +402,7 @@ export class Router {
         // Default MemoryHistory doesn't have a getCurrentLocation so you'd need to pass url directly
         let url = start_url;
         if (!start_url && (this.history && this.history.location)) {
-            location = this.history.location();
+            location = this.history.location;
             url = location.pathname + location.search;
         }
 
