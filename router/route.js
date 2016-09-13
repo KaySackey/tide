@@ -115,3 +115,18 @@ export function route(path, handler, options = {}) {
 
    return new Route(name, path, handler);
 }
+
+/**
+ * Shortcut to rendering a single React Component w/o having to write a controller function
+ * @param path
+ * @param react_component
+ * @param options
+ * @returns {Route}
+ */
+export function route_react(path, react_component, options={}){
+    let f_render = function(tide, request, params) {
+        tide.render(request, react_component, params)
+    };
+
+    return route(path, f_render, options)
+}

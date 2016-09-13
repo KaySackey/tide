@@ -408,6 +408,7 @@ export class Router {
 
         if( this.dispatch_on_start && typeof url === 'string') {
             this.go(url, 'replace');
+
         }
 
         // Start listening to PopState or HashChange events
@@ -416,7 +417,8 @@ export class Router {
                 // Go to route, don't update history anymore
                 this.go(history_location.pathname+history_location.search, null)
             }
-            this._log(2, `History Listen: Got location`, history_location);
+
+            this._log(0, `History Listen [${history_location.action}]: Got location`, history_location);
         });
     }
 
@@ -513,6 +515,8 @@ export class Router {
         // url includes query strings if they were defined as part of the route
         let url      = route._crossroads.interpolate(params);
         this.go(url)
+
+        
     }
 
     /**

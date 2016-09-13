@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from 'moment';
 
 /**
  Returns date as a string
@@ -8,11 +8,11 @@ import moment from "moment";
 
  Omits time after a certain point.
 
- * @param {Date} date
+ * @param {Date} a_date
  * @returns {string}
  */
-export function humanize_date(date) {
-    date = moment(date);
+export function humanize_date(a_date) {
+    const date = moment(a_date);
 
     // Within 6 hours
     if (date > moment().subtract(22, 'hours')) {
@@ -40,11 +40,11 @@ export function humanize_date(date) {
 
 /*
   Same as humanize_date, but always prints time.
-  * @param {Date} date
+  * @param {Date} a_date
   * @returns {string}
   */
-export function humanize_time(date) {
-    date = moment(date);
+export function humanize_time(a_date) {
+    const date = moment(a_date);
 
     // Within 6 hours
     if (date > moment().subtract(48, 'hours')) {
