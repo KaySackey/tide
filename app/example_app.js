@@ -8,6 +8,7 @@ import {BaseApp} from "tide/base/app";
 
 /** Views **/
 export class Welcome extends View {
+    static displayName = "Tide.Welcome";
     render() {
         let {status, title} = this.props;
 
@@ -24,6 +25,7 @@ export class Welcome extends View {
 }
 
 export class NotFound extends View {
+    static displayName = "Tide.NotFound";
     render() {
         return (
           <div>

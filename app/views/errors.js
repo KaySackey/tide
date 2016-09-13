@@ -3,6 +3,8 @@ import {IndexLink} from "tide/router";
 import {View} from "tide/base/view";
 
 export class InternalError extends View {
+    static displayName = "Tide.InternalError";
+
     render() {
         return (
           <div>
@@ -15,9 +17,11 @@ export class InternalError extends View {
 }
 
 export class NotFound extends View {
+    static displayName = "Tide.NotFound";
+
     render() {
         let code = `route("/{path*}", my_controller.not_found, "error_404")`;
-        
+
         return (
           <div>
               <h1>Tide: Page Not Found</h1>

@@ -21,6 +21,7 @@ export const defaultContextTypes = {
  */
 export class Wrapper extends MobxObserver{
     static childContextTypes = defaultContextTypes;
+    static displayName = "Tide.Wrapper";
 
     static propTypes = {
         app   : PropTypes.object.isRequired,

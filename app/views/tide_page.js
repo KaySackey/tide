@@ -9,6 +9,8 @@ import {MobxObserver} from "tide/base/base";
  * @class
  */
 export class TidePage extends MobxObserver {
+    static displayName = "Tide.Page";
+
     get page_state() {
         return this.props.tide.page_state;
     }
