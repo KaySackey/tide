@@ -6,6 +6,8 @@ import {page_state} from "./stores/page_state";
 import {message_store} from "./stores/messages";
 import {general_store} from "./stores/general";
 
+import {ConfigurationError} from "tide/exceptions";
+
 /**
  * @class
  */
@@ -80,7 +82,7 @@ export class TideApp {
      * Set up an application
      * @param {Array.<BasicConf>} apps
      */
-    @action setup_apps(apps) {
+    @action setup_apps() {
         this._applications_to_configure.forEach((app_conf) => {
             if ( !app_conf.name ) {
                 throw new TypeError(`Apps need a name as part of their configuration! Looked inside: ${JSON.stringify(app_conf)}`)
@@ -97,6 +99,10 @@ export class TideApp {
             // Give the application some of its own configured data
             app_conf.app.store = app_conf.store;
             app_conf.app.tide  = this;
+
+            if(this._apps.has(app_conf.name)){
+                throw new ConfigurationError(`The application named ${app_conf.name} was listed twice.`)
+            }
 
             // Set the completed app in our table
             this._apps.set(app_conf.name, app_conf);
@@ -245,7 +251,7 @@ export class TideApp {
         // Get the app this route came from
         let app_label = route.context.app_label;
         let app_conf  = this.get_app(app_label);
-        
+
         // Transition to the next state
         page_state
           .process_transition(route, app_conf, view, data)
