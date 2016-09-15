@@ -50,10 +50,6 @@ export class RenderingContext extends MobxObserver {
     static childContextTypes = defaultContextTypes;
     static displayName       = "Tide.RenderingContext";
 
-    // React. So we can suppress inspection warnings in the IDE
-    props = {};
-    state = {};
-
     constructor(props) {
         super(props);
         bind_all_react_component_methods(this);
