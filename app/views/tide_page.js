@@ -100,7 +100,7 @@ export class TidePage extends MobxObserver {
             {this.tide.dev_mode ? <DevTools /> : ""}
         </div>;
 
-        let layout_component = this._create_view(layout, {}, [children]);
+        let layout_component = this._create_view(layout, {}, children);
 
         return <Wrapper app={app} store={store}>{layout_component}</Wrapper>;
     }
