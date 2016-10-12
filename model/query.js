@@ -99,11 +99,14 @@ export class Query {
             return error.response
               .json()
               .then(json => {
-                  throw new QueryError(this, {error: err, errorResponse: json})
+                  throw new QueryError(this, {error: error, errorResponse: json})
+              })
+              .catch(_ => {
+                  throw new QueryError(this, {error: error})
               })
         }
 
-        throw new QueryError(this, {error: err})
+        throw new QueryError(this, {error: error})
     }
 
     deserialize(json) {
