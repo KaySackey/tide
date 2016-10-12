@@ -44,6 +44,12 @@ export class Link extends React.Component{
         e.preventDefault();
         e.stopPropagation();
 
+        let {to} = this.props;
+
+        if(to.includes("/")){
+            window.location = to;
+        }
+
         this.router.go(this.url);
     }
 
@@ -60,12 +66,13 @@ Link.contextTypes = {
     // Context provided by router
     router: React.PropTypes.object
 };
-
 Link.propTypes = {
     // Context provided by router
     to: PropTypes.string.isRequired,
     params: PropTypes.object,
-    children: PropTypes.node.isRequired
+    children: PropTypes.node.isRequired,
+    activeClassName: PropTypes.string,
+    onlyActiveOnIndex: PropTypes.string
 };
 Link.defaultProps = {
     params: {}
