@@ -1,4 +1,12 @@
 import moment from 'moment';
+import 'moment/locale/en-gb';
+moment.locale('en-gb');
+
+//import subtractHours from 'date-fns/sub_hours';
+//import startOfWeek from 'date-fns/start_of_week';
+//import startOfYear from 'date-fns/start_of_year';
+//import formatDate from 'date-fns/format';
+//import isBefore from 'date-fns/is_before';
 
 /**
  Returns date as a string
