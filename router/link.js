@@ -54,9 +54,9 @@ export class Link extends React.Component{
     }
 
     render(){
-        // todo: have active class
-        let {to, params, children, ...extra} = this.props;
-
+        // todo: have active class onlyActiveOnIndex / activeClassName
+        let {to, params, children, activeClassName, onlyActiveOnIndex, ...extra} = this.props;
+        
         return (
           <a {...extra} href={this.url} onClick={this.handleClick}>{this.props.children}</a>
         )
@@ -72,7 +72,7 @@ Link.propTypes = {
     params: PropTypes.object,
     children: PropTypes.node.isRequired,
     activeClassName: PropTypes.string,
-    onlyActiveOnIndex: PropTypes.string
+    onlyActiveOnIndex: PropTypes.bool
 };
 Link.defaultProps = {
     params: {}
