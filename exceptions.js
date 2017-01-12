@@ -24,6 +24,7 @@ export class InvalidResponse extends TideError {
         let message = `Status: ${status} on ${response.url}`;
         super(message);
         this.response = response;
+        this.name = "InvalidResponse";
     }
 }
 

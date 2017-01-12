@@ -95,15 +95,15 @@ export class Query {
     }
 
     handle_error(error){
-        if ( error.name == "InvalidResponse" && error.response.status == 400 ) {
+        if ( error.name === "InvalidResponse" && error.response.status === 400 ) {
             return error.response
               .json()
-              .then(json => {
-                  throw new QueryError(this, {error: error, errorResponse: json})
-              })
-              .catch(_ => {
-                  throw new QueryError(this, {error: error})
-              })
+              .then(
+                // Successfully made JSON
+                (json) => { throw new QueryError(this, {error: error, errorResponse: json}) },
+                // Couldn't make JSON
+                (_) => {throw new QueryError(this, {error: error})}
+              )
         }
 
         throw new QueryError(this, {error: error})

@@ -16,6 +16,7 @@ export class QueryError extends ExtendableError {
     constructor(query, context) {
         super(`An error occurred on ${query.name}. ${context.error.message}`);
         this.context = context;
+        this.name = "QueryError";
     }
 }
 
