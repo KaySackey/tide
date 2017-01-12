@@ -23,6 +23,17 @@ export function request(url, options) {
         "Content-Type": options.content_type,
         "Accept"      : options.content_type
     });
+    
+    if(!url.includes('http')){
+        let start = '';
+        
+        start = window.location.protocol + "//" + window.location.hostname;
+        if(window.location.port){
+            start = start + ":" + window.location.port;
+        }
+        
+        url = start + url;
+    }
 
     return fetch(url, {
         method     : o.method,
