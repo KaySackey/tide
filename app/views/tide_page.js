@@ -1,5 +1,5 @@
 import React from "react";
-import DevTools from "mobx-react-devtools";
+//import DevTools from "mobx-react-devtools";
 import {computed} from "mobx";
 import {InternalError, NotFound} from "./errors";
 import {Wrapper} from "tide/base/context";
@@ -97,7 +97,7 @@ export class TidePage extends MobxObserver {
 
         let children = <div>
             {view || <InternalError />}
-            {this.tide.dev_mode ? <DevTools /> : ""}
+            {/*{this.tide.dev_mode ? <DevTools /> : ""}*/}
         </div>;
 
         let layout_component = this._create_view(layout, {}, children);
