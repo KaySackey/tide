@@ -412,13 +412,13 @@ export class Router {
         }
 
         // Start listening to PopState or HashChange events
-        this._history_disposer = this.history.listen(history_location => {
-            if(history_location.action === "POP"){
+        this._history_disposer = this.history.listen((history_location, action) => {
+            if(action === "POP"){
                 // Go to route, don't update history anymore
                 this.go(history_location.pathname+history_location.search, null)
             }
 
-            this._log(0, `History Listen [${history_location.action}]: Got location`, history_location);
+            this._log(0, `History Listen [${action}]: Got location`, history_location);
         });
     }
 
