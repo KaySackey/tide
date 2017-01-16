@@ -144,8 +144,18 @@ export const consoleJSON = (object, depth, delimiter) => {
  * @param global_obj
  */
 export function monkey_patch(global_obj) {
+    // Polyfill for browsers that do not support detailed logging
+    console.group = console.group || console.log;
+    console.debug = console.debug || console.log;
+    console.info = console.info || console.log;
+    console.error = console.error || console.log;
+    console.table = console.table || console.log;
+    console.groupEnd = console.groupEnd || function() {};
+    
+    // Pretty printed JSON
     global_obj.console.json = consoleJSON;
 
+    // Console.stack
     // Like console.trace except it prints the object out immediately.
     Object.defineProperty(global_obj.console, 'stack', {
         enumerable  : false,
@@ -155,8 +165,8 @@ export function monkey_patch(global_obj) {
             console.debug((new Error).stack);
         }
     });
-
-
+    
+    // Console.print_error; Pretty print error objects
     console.print_error = function (error) {
         console.error(error.message);
         if ( error.extra ) {
