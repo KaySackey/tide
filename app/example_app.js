@@ -4,7 +4,7 @@ import {View} from "tide/base/view";
 import {Link, IndexLink} from "tide/router";
 import {route} from "tide/router/route";
 import {BaseStore} from "tide/model/store";
-import {BaseApp} from "tide/base/app";
+import {BasicApp} from "tide/app/conf";
 
 /** Views **/
 export class Welcome extends View {
@@ -124,12 +124,8 @@ class ExampleStore extends BaseStore {
     };
 }
 
-class ExampleApp extends BaseApp{
+class ExampleApp extends BasicApp {
     // Nothing here
-    // During rendering a trigger will bubble up all the way till it hits the app instance that's currently running
-
-    // don't use react lifecycle component; even if it is a React Component.
-    // in the future BaseApp will *not* be a React component; so setup everything in props like this is a normal object
 }
 
 
@@ -138,7 +134,7 @@ export class AppConf {
     name     = "example";
     routes   = routes;
     layout   = ExampleLayout;
-    app      = <ExampleApp />;
+    app      = new ExampleApp();
     store    = new ExampleStore();
 
     ready(){

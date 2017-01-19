@@ -74,7 +74,7 @@ export class RenderingContext extends MobxObserver {
     }
 
     /**
-     * @returns {*|BaseApp}
+     * @returns {*|BasicApp}
      */
     get app() {
         if(!this.context.app){
