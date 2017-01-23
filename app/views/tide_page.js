@@ -1,9 +1,10 @@
-import React from "react";
+import React, {PropTypes} from "react";
 //import DevTools from "mobx-react-devtools";
 import {computed} from "mobx";
 import {InternalError, NotFound} from "./errors";
-import {Wrapper} from "tide/base/context";
 import {MobxObserver} from "tide/base/base";
+
+
 
 /**
  * @class
@@ -102,6 +103,38 @@ export class TidePage extends MobxObserver {
 
         let layout_component = this._create_view(layout, {}, children);
 
-        return <Wrapper app={app} store={store}>{layout_component}</Wrapper>;
+        return <TideWrapper app={app}
+                            store={store}
+                            layout_component={layout_component} />;
+    }
+}
+
+
+/**
+ * Used by the TidePage to create a context for a displaying the current view in.
+ * @class
+ */
+export class TideWrapper extends MobxObserver{
+    static childContextTypes = {
+        app   : PropTypes.object,
+        store : PropTypes.object
+    };
+    static displayName = "Tide.Wrapper";
+
+    static propTypes = {
+        app   : PropTypes.object.isRequired,
+        store : PropTypes.object.isRequired,
+        layout_component: PropTypes.node.isRequired
+    };
+
+    getChildContext() {
+        return {
+            app: this.props.app,
+            store: this.props.store
+        };
+    }
+
+    render(){
+        return <div>{this.props.layout_component}</div>
     }
 }

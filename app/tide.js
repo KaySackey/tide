@@ -47,7 +47,7 @@ export class Tide extends MobxObserver {
     getChildContext() {
         return {
             tide  : this.tide_app,
-            app   : null,           // we could put a fake store that just throws errors here?
+            app   : null,           // we could put a fake store that just throws errors here? .... app is defined via the TideWrapper
             parent: this,           // we could put some kind of logging here thanks to catching all triggers
             router: this.tide_app.router
         };

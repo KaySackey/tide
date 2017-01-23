@@ -28,6 +28,4 @@ export class InvalidResponse extends TideError {
     }
 }
 
-
-
 export * from "./router/exceptions";

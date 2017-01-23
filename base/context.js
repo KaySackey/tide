@@ -15,31 +15,6 @@ export const defaultContextTypes = {
     tide  : PropTypes.object
 };
 
-/**
- * Used by the TidePresenter to create a context for a displaying the current view in.
- * @class
- */
-export class Wrapper extends MobxObserver{
-    static childContextTypes = defaultContextTypes;
-    static displayName = "Tide.Wrapper";
-
-    static propTypes = {
-        app   : PropTypes.object.isRequired,
-        store : PropTypes.object.isRequired,
-        children: PropTypes.node.isRequired
-    };
-
-    getChildContext() {
-        return {
-            app: this.props.app,
-            store: this.props.store
-        };
-    }
-
-    render(){
-        return <div>{this.props.children}</div>
-    }
-}
 
 /**
  * @class

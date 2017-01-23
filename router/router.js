@@ -393,7 +393,7 @@ export class Router {
      * @param {string} [start_url] - optional location to begin operating upon
      */
     start(start_url) {
-        this._log(1, "Starting...");
+        this._log(3, "Starting...");
         let location;
 
         this._initialize();
@@ -418,12 +418,12 @@ export class Router {
                 this.go(history_location.pathname+history_location.search, null)
             }
 
-            this._log(0, `History Listen [${action}]: Got location`, history_location);
+            this._log(3, `History Listen [${action}]: Got location`, history_location);
         });
     }
 
     stop() {
-        this._log(1, `Stopped...`);
+        this._log(3, `Stopped...`);
         if(!this._initialized)
             return;
 
@@ -456,7 +456,7 @@ export class Router {
         // Throw error if we are uninitialized
         this._must_be_initialized();
 
-        this._log(1, `Go: ${url}`);
+        this._log(3, `Go: ${url}`);
 
         // Final parameter will be sent as first parameter of the matched routes internal handler
         // e.g. this is why we can do addRoute(path, (location, params) => .... )
@@ -647,7 +647,7 @@ export class Router {
             route._crossroads = this.crossroads.addRoute(route.path, this._make_crossroads_shim(route));
         }
 
-        this._log(2, `Initialized ${routes.length} routes`);
+        this._log(3, `Initialized ${routes.length} routes`);
         this._initialized = true;
     }
 
