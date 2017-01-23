@@ -32,8 +32,7 @@ export class Wrapper extends MobxObserver{
     getChildContext() {
         return {
             app: this.props.app,
-            store: this.props.store,
-            parent: this.props.app
+            store: this.props.store
         };
     }
 

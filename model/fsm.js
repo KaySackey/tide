@@ -36,13 +36,13 @@ SOFTWARE.
 
     Result: {
       SUCCEEDED:    1, // the event transitioned successfully from one state to another
-      NOTRANSITION: 2, // the event was successfull but no state transition was necessary
+      NOTRANSITION: 2, // the event was successful but no state transition was necessary
       CANCELLED:    3, // the event was cancelled by the caller in a beforeEvent callback
       PENDING:      4  // the event is asynchronous and the caller is in control of when the transition occurs
     },
 
     Error: {
-      INVALID_TRANSITION: 100, // caller tried to fire an event that was innapropriate in the current state
+      INVALID_TRANSITION: 100, // caller tried to fire an event that was inappropriate in the current state
       PENDING_TRANSITION: 200, // caller tried to fire an event while an async transition was still pending
       INVALID_CALLBACK:   300 // caller provided callback function threw an exception
     },
@@ -54,7 +54,7 @@ SOFTWARE.
 
     create: function(cfg, target) {
 
-      var initial      = (typeof cfg.initial == 'string') ? { state: cfg.initial } : cfg.initial; // allow for a simple string, or an object with { state: 'foo', event: 'setup', defer: true|false }
+      var initial      = (typeof cfg.initial === 'string') ? { state: cfg.initial } : cfg.initial; // allow for a simple string, or an object with { state: 'foo', event: 'setup', defer: true|false }
       var terminal     = cfg.terminal || cfg['final'];
       var fsm          = target || cfg.target  || {};
       var events       = cfg.events || [];

@@ -167,7 +167,7 @@ export class TideApp {
 
     /**
      * Set the state of the page state to pending
-     * Returns true if the state was already pending or processing
+     * Returns true if the state was not already pending or processing
      * Returns false otherwise
      * @returns {boolean}
      */
@@ -177,15 +177,6 @@ export class TideApp {
         }
         this.page_state.set_processing();
         return true;
-    }
-
-    /**
-     * Set the current page state to pending.
-     * todo: Depracate? Do we need this? We do need a method to transition to a whole new page w/ data we already
-     * have. but it doesn't have to be manual. Maybe a transition_to(route, view, data)
-     */
-    set_pending() {
-        this.page_state.set_pending();
     }
 
     /**
@@ -200,7 +191,7 @@ export class TideApp {
      * @returns {boolean}
      */
     @computed get processing() {
-        return this.page_state.status == "processing"
+        return this.page_state.status === "processing"
     }
 
     /**
@@ -208,7 +199,7 @@ export class TideApp {
      * @returns {boolean}
      */
     @computed get pending() {
-        return this.page_state.status == "pending"
+        return this.page_state.status === "pending"
     }
 
     /**

@@ -9,10 +9,10 @@ import {app_conf as example_conf} from "./example_app";
 
 /**
  * @class
- * 
+ *
  * React requires a top level component to kick off the rendering.
  * Look at TideApp to see the actual application of Tide. This is what is available as a 'tide' variable in your
- * apps, views and presenters. 
+ * apps, views and presenters.
  */
 export class Tide extends MobxObserver {
     static displayName       = "Tide";
@@ -41,33 +41,33 @@ export class Tide extends MobxObserver {
         super(props);
         use(this, BasicEventHandler);
         bind_all_react_component_methods(this);
-        this.app = new TideApp(this, props);
+        this.tide_app = new TideApp(this, props);
     }
 
     getChildContext() {
         return {
-            tide  : this.app,
+            tide  : this.tide_app,
             app   : null,           // we could put a fake store that just throws errors here?
             parent: this,           // we could put some kind of logging here thanks to catching all triggers
-            router: this.app.router
+            router: this.tide_app.router
         };
     }
 
     @action componentWillMount() {
         super.componentWillMount();
-        this.app.start();
+        this.tide_app.start();
 
         // Debugging
         window.__debug__ = {
-            tide  : this.app,
-            router: this.app.router,
-            apps  : this.app.apps,
-            mode  : this.app.mode
+            tide  : this.tide_app,
+            router: this.tide_app.router,
+            apps  : this.tide_app.apps,
+            mode  : this.tide_app.mode
         };
     }
 
     componentWillUnmount() {
-        this.app.stop();
+        this.tide_app.stop();
     }
 
     /**
@@ -76,7 +76,7 @@ export class Tide extends MobxObserver {
      */
     render() {
         return (
-          <TidePage tide={this.app}/>
+          <TidePage tide={this.tide_app}/>
         )
     }
 }
