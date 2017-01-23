@@ -12,7 +12,12 @@ export class View extends RenderingContext {
      * @param name
      */
     onAct(name) {
-        this.trigger(name)
+        if(this.props.onAct){
+            this.props.onAct(name)
+        }
+        else{
+            this.trigger(name)
+        }
     }
 
     /**
