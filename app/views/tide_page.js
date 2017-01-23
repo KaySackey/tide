@@ -35,7 +35,6 @@ export class TidePage extends MobxObserver {
         let route_name = page_state.route_name;
         let last_update = page_state.last_update;
 
-        console.log(`[Tide] Current View: ${route_name} - ${status}. Updated @ ${last_update}`);
 
         if ( !status ) {
             return <div>[Tide] Waiting to initialize data store.</div>
@@ -80,7 +79,15 @@ export class TidePage extends MobxObserver {
         let app_label  = page_state.app_label;
         let status     = page_state.status;
         let view       = this.current_view;
-
+        let last_update = page_state.last_update;
+        
+        console.groupCollapsed(`[Tide][Render] [${status}] ${app_label} / ${route_name}`);
+        console.info(`[Tide][Render] Updated @ ${last_update}`);
+        console.info(`[Tide][Render] Route: ${route_name}`);
+        console.info(`[Tide][Render] App: ${app_label}`);
+        console.info(`[Tide][Render] Status: ${status}`);
+        console.groupEnd();
+        
         if(!route_name || !this.tide.has_app(app_label)){
             return <InternalError />
         }
@@ -93,9 +100,7 @@ export class TidePage extends MobxObserver {
         let app    = app_conf.app;
         let store  = app_conf.store;
         let layout = app_conf.layout;
-
-        console.log(`[Tide] Rendering... ${route_name} in app: ${app_label}. Status: ${status}`);
-
+        
         let children = <div>
             {view || <InternalError />}
             {/*{this.tide.dev_mode ? <DevTools /> : ""}*/}

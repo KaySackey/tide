@@ -20,10 +20,11 @@ export class TideApp {
         bind_all_methods(this);
 
         this.presenter                  = presenter;
+        
         this.page_state                 = page_state;
         this._general_store             = general_store;
         this._apps                      = new Map();
-        this.dev_mode                   = this.mode == "development";
+        this.dev_mode                   = this.mode === "development";
         this.conf                       = props.conf;
         this.mode                       = props.mode;
         this.basename                   = props.basename;
@@ -80,7 +81,6 @@ export class TideApp {
 
     /**
      * Set up an application
-     * @param {Array.<BasicConf>} apps
      */
     @action setup_apps() {
         this._applications_to_configure.forEach((app_conf) => {
