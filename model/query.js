@@ -63,7 +63,7 @@ export class Query {
     }
 
     get cache_key() {
-        if ( this.method == "get" ) {
+        if ( this.method === "get" ) {
             return Http.path(this.endpoint, this.data);
         }
 

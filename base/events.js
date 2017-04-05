@@ -75,7 +75,7 @@ export class BasicEventHandler {
         if ( e.bubbles ) {
             const parent = e.currentTarget.parent;
 
-            if ( parent == undefined && parent == null ) {
+            if ( parent === undefined && parent === null ) {
                 console.debug('Terminal ', e.name, ' on ', this.constructor.name);
             }
             else {

@@ -69,7 +69,7 @@ const function_props = (prototype) => {
 
     for (var name in properties) {
         let descriptor        = properties[name];
-        let is_not_computed   = descriptor.get !== undefined || descriptor.set == undefined;
+        let is_not_computed   = descriptor.get !== undefined || descriptor.set === undefined;
         let is_function       = descriptor.value instanceof Function;
         if (is_function && is_not_computed) {
             arr.push({name: name, descriptor: descriptor});

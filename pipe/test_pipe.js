@@ -49,7 +49,7 @@ pipeline = [
 // then the next thing is an object, it'll act as a switch statement
 // you can also return [key, value] and it'll pass on value to the pipes of that key
 pipeline = [
-    number => number == 10 ? 'ok' : 'fail',
+    number => number === 10 ? 'ok' : 'fail',
     {
         ok: [
           _ => "number is ten"
@@ -109,7 +109,7 @@ response.then((value) => {
 
 // Passed an array
 //pipeline = [
-//    number => number == 10 ? 'ok' : 'fail',
+//    number => number === 10 ? 'ok' : 'fail',
 //    {
 //        ok: [
 //          _ => "number is ten"

@@ -1,4 +1,4 @@
-import {map as mobxMap} from "mobx";
+import {observable} from "mobx";
 import {bind_all_methods} from "tide/utils";
 import {QueryNotFound} from "./exceptions";
 import {Query} from "./query";
@@ -12,7 +12,7 @@ export class BaseStore {
     };
 
     cache         = new Map();
-    bin           = mobxMap();
+    bin           = observable.map();
     uninitialized = true;
 
     constructor() {
@@ -32,7 +32,7 @@ export class BaseStore {
     }
 
     set(key, value) {
-        if ( value == undefined ) {
+        if ( value === undefined ) {
             throw new TypeError("Value in a store, cannot be set to undefined.")
         }
         this.bin.set(key, value);

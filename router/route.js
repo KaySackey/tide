@@ -21,7 +21,7 @@ export class Route {
          * @property handler
          * @type {string|function}
          */
-        if(typeof handler == 'string'){
+        if(typeof handler === 'string'){
             this.handler = handler.trim();
         }else {
             this.handler = handler;
@@ -98,7 +98,7 @@ export function route(path, handler, options = {}) {
     }
 
    if(!name){
-       if(typeof handler == 'string'){
+       if(typeof handler === 'string'){
            name = handler;
        }
        else if(handler instanceof Function && handler.name && !handler.isMobxAction){

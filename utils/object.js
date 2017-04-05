@@ -71,12 +71,12 @@ export function bind_all_react_component_methods(obj) {
 
 // Check if object, string, or collection is empty
 export function is_empty(obj) {
-    if ( typeof obj == "string" ) {
-        return obj == "";
+    if ( typeof obj === "string" ) {
+        return obj === "";
     }
 
     if ( Array.isArray(obj) ) {
-        return obj.length == 0;
+        return obj.length === 0;
     }
 
     if ( typeof obj === 'object' || typeof obj === 'function' ) {

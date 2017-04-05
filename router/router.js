@@ -102,7 +102,7 @@ export class BasicDispatcher {
         let params = matched_route.params;
         let handler = route.handler;
 
-        if ( typeof handler == 'string' ) {
+        if ( typeof handler === 'string' ) {
             this._dispatch_on_string(matched_route)
         }
         else if ( handler instanceof Function ) {
@@ -257,7 +257,7 @@ export class Router {
         }
 
         // Create History
-        if(options.history == 'guess'){
+        if(options.history === 'guess'){
             options.history = this._has_document_model ? 'browser' : 'server';
         }
         switch(options.history){
@@ -294,7 +294,7 @@ export class Router {
         let name = options.name;
 
         if(!name){
-            if(typeof handler == 'string'){
+            if(typeof handler === 'string'){
                 name = handler;
             }
             else if(handler instanceof Function && handler.name){
@@ -581,7 +581,7 @@ export class Router {
 
         let temp = url.split("?");
 
-        if ( temp.length == 2 ) {
+        if ( temp.length === 2 ) {
             // url part is everything before the ?
             pathname = temp[0];
             // We do not want to keep empty search strings
@@ -669,9 +669,9 @@ export class Router {
          * @param params
          */
         return (action, location, params) => {
-                    if(action == 'push'){
+                    if(action === 'push'){
                         this.history.push(location);
-                    }else if(action == 'replace'){
+                    }else if(action === 'replace'){
                         this.history.replace(location);
                     }
 

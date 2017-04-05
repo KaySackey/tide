@@ -346,7 +346,7 @@ class PipelineFSM {
     }
 
     get started(){
-        return this.step == null;
+        return this.step === null;
     }
 
     /**
@@ -378,7 +378,7 @@ class PipelineFSM {
         if(this.__paused)
           return 'paused';
 
-        if(this.done || this.step == this.pipeline.length)
+        if(this.done || this.step === this.pipeline.length)
           return 'done';
 
         if(this.step < 0 || this.step > this.pipeline.length)
@@ -400,7 +400,7 @@ class PipelineFSM {
      * @returns {boolean}
      */
     get running(){
-        return this.status == 'running';
+        return this.status === 'running';
     }
 
     /**
@@ -537,7 +537,7 @@ class PipelineFSM {
             return operation;
         }
         else if ( operation instanceof Object ) {
-            if ( operation.constructor.name == 'Object' ) {
+            if ( operation.constructor.name === 'Object' ) {
                 // This is a raw object; so we treat it like a switch statement
 
                 // The accumulated result will be used as a key for the 'switch'
@@ -604,7 +604,7 @@ class PipelineFSM {
         let key;
         let value;
 
-        if ( acc instanceof Array && depth == 1 ) {
+        if ( acc instanceof Array && depth === 1 ) {
             if ( acc.length != 2 ) {
                 throw this._annotate_error(new BranchingError(
                   `Pipe expected previous operation to return a sting or an array of length 2 in [key, value] format.` +
@@ -617,11 +617,11 @@ class PipelineFSM {
             key   = this._getKey(acc[0], depth + 1)[0];
             value = acc[1];
         }
-        else if ( typeof acc == 'string' ) {
+        else if ( typeof acc === 'string' ) {
             key   = acc;
             value = acc;
         }
-        else if ( typeof acc == "boolean" ) {
+        else if ( typeof acc === "boolean" ) {
             key   = acc.toString();
             value = acc;
         }
@@ -656,12 +656,12 @@ class PipelineFSM {
     _log(verbosity, ...messages) {
         if ( this.verbosity >= verbosity ) {
             let logger = console.log;
-            if(verbosity == 0){
+            if(verbosity === 0){
                 logger = console.error || console.log;
             }
-            else if(verbosity == 1){
+            else if(verbosity === 1){
                 logger = console.warn || console.log;
-            }else if(verbosity == 2){
+            }else if(verbosity === 2){
                 logger = console.info || console.log;
             }else{
                 logger = console.debug || console.log;
