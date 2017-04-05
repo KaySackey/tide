@@ -1,4 +1,4 @@
-import {computed, observable, asFlat, asStructure} from "mobx";
+import {computed, observable} from "mobx";
 
 /**
  * Deals with page state & user state
@@ -15,7 +15,7 @@ export class PageStateStore {
     - processing: view has been rendered but needs to be locked to interaction, in order to service a user request. called externally.
     
      */
-    @observable page_state = asFlat(new InternalPageState());
+    @observable.ref page_state = new InternalPageState();
 
     refresh() {
         this.page_state        = new InternalPageState();
@@ -135,9 +135,9 @@ class InternalPageState {
     @observable route_name;
     @observable last_update = new Date();
 
-    @observable view      = asStructure(null);
     @observable app_label = null;
-    @observable layout    = asStructure(null);
+    @observable.ref view      = null;
+    @observable.ref layout    = null;
 
     success(data) {
         this.data        = data;
