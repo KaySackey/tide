@@ -11,11 +11,11 @@ Event Bubbling
 
 - React events bubble up through the compoennt network
 - React context is filled out with:
-    - parent: React.PropTypes.object
-    - app: React.PropTypes.object
-    - store: React.PropTypes.object
-    - router: React.PropTypes.object
-    - tide: React.PropTypes.object
+    - parent: PropTypes.object
+    - app: PropTypes.object
+    - store: PropTypes.object
+    - router: PropTypes.object
+    - tide: PropTypes.object
 
 Components: View/Presenter
   - Autobinds the methods

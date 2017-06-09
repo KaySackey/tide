@@ -20,7 +20,12 @@
   "homepage": "https://github.com/KaySackey/tide",
   "babel": {
     "presets": [
-      ["es2015", {"loose": true}],
+      [
+        "es2015",
+        {
+          "loose": true
+        }
+      ],
       "react",
       "stage-0"
     ],
@@ -48,15 +53,16 @@
     "babel-register": "^6.14.0"
   },
   "dependencies": {
-    "react": "^15.3.1",
-    "react-dom": "^15.3.1",
+    "crossroads": "^0.12.2",
+    "history": "^4.0.0",
     "mobx": "^2.4.3",
     "mobx-react": "^3.5.5",
     "mobx-react-devtools": "^4.2.4",
     "mobx-remotedev": "^0.1.3",
-    "serializr": "^1.1.6",
     "moment": "^2.17.1",
-    "crossroads": "^0.12.2",
-    "history": "^4.0.0"
+    "prop-types": "^15.5.10",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "serializr": "^1.1.6"
   }
 }

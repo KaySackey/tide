@@ -1,4 +1,4 @@
-import React, {PropTypes} from "react";
+import React from "react"; import PropTypes from 'prop-types';
 import {computed} from "mobx";
 import {MobxObserver} from "tide/base/base";
 import {use, bind_all_react_component_methods} from "tide/utils";

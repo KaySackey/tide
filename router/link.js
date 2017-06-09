@@ -1,4 +1,4 @@
-import React, {PropTypes} from "react";
+import React from "react"; import PropTypes from 'prop-types';
 
 /**
  * @class Link
@@ -64,7 +64,7 @@ export class Link extends React.Component{
 }
 Link.contextTypes = {
     // Context provided by router
-    router: React.PropTypes.object
+    router: PropTypes.object
 };
 Link.propTypes = {
     // Context provided by router

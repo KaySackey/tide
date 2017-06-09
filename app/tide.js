@@ -1,4 +1,4 @@
-import React, {PropTypes} from "react";
+import React from "react"; import PropTypes from 'prop-types';
 import {action} from "mobx";
 import {use, bind_all_react_component_methods} from "tide/utils";
 import {MobxObserver} from "tide/base/base";
@@ -25,10 +25,10 @@ export class Tide extends MobxObserver {
         tide  : PropTypes.object
     };
     static propTypes         = {
-        initial_data: React.PropTypes.object,
-        mode        : React.PropTypes.oneOf(["string", "development"]),
-        basename    : React.PropTypes.string,
-        apps        : React.PropTypes.array
+        initial_data: PropTypes.object,
+        mode        : PropTypes.oneOf(["string", "development"]),
+        basename    : PropTypes.string,
+        apps        : PropTypes.array
     };
     static defaultProps      = {
         initial_data: {},

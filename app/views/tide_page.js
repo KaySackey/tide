@@ -1,4 +1,4 @@
-import React, {PropTypes} from "react";
+import React from "react"; import PropTypes from 'prop-types';
 //import DevTools from "mobx-react-devtools";
 import {computed} from "mobx";
 import {InternalError, NotFound} from "./errors";
