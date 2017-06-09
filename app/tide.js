@@ -4,7 +4,7 @@ import {use, bind_all_react_component_methods} from "tide/utils";
 import {MobxObserver} from "tide/base/base";
 import {BasicEventHandler} from "tide/base/events";
 import {TidePage} from "./views/tide_page";
-import {TideApp} from "./app";
+import {TideApp} from "./tide_app";
 import {app_conf as example_conf} from "./example_app";
 
 /**

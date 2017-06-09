@@ -18,17 +18,17 @@ export class TideApp {
      */
     constructor(presenter, props) {
         bind_all_methods(this);
-
+        
+        this.settings                   = props.settings;
+        
+        this.basename                   = props.basename;
+        this.mode                       = props.mode;
         this.presenter                  = presenter;
         
         this.page_state                 = page_state;
         this._general_store             = general_store;
         this._apps                      = new Map();
         this.dev_mode                   = this.mode === "development";
-        this.conf                       = props.conf;
-        this.mode                       = props.mode;
-        this.basename                   = props.basename;
-        this._applications_to_configure = props.apps;
 
         /**
          * @type {TideMessageStore}
@@ -83,18 +83,18 @@ export class TideApp {
      * Set up an application
      */
     @action setup_apps() {
-        this._applications_to_configure.forEach((app_conf) => {
+        this.settings.apps.forEach((app_conf) => {
             if ( !app_conf.name ) {
                 throw new TypeError(`Apps need a name as part of their configuration! Looked inside: ${JSON.stringify(app_conf)}`)
             }
 
-            // Parse its routes into our router
-            // TideStore (.. which is badly named... its technically just a rendering engine).
-            // will end up using the context to determine which layout to use during a render
-            for (let route of app_conf.routes) {
-                route.context.app_label = app_conf.name;
-                this.router.set(route);
-            }
+//            // Parse its routes into our router
+//            // TideStore (.. which is badly named... its technically just a rendering engine).
+//            // will end up using the context to determine which layout to use during a render
+//            for (let route of app_conf.routes) {
+//                route.context.app_label = app_conf.name;
+//                this.router.set(route);
+//            }
 
             // Give the application some of its own configured data
             app_conf.app.store = app_conf.store;
@@ -107,6 +107,11 @@ export class TideApp {
             // Set the completed app in our table
             this._apps.set(app_conf.name, app_conf);
         });
+        
+        // Add Routes
+        this.settings.routes.forEach((route) => {
+            this.add_route(route)
+        });
 
         // Now that all the apps are in the listing
         // Let it complete them complete their initialization
@@ -115,6 +120,18 @@ export class TideApp {
             console.log(`[Tide] Initial for ${app_conf.name}`, initial);
             app_conf.ready(initial)
         })
+    }
+    
+    add_route(route){
+        if(Array.isArray(route)){
+            route.forEach((route) => {
+                this.add_route(route)
+            });
+            
+            return;
+        }
+        
+        this.router.set(route);
     }
 
     /**
@@ -240,7 +257,7 @@ export class TideApp {
         const page_state = this.page_state;
 
         // Get the app this route came from
-        let app_label = route.context.app_label;
+        let app_label = route.context.app_label || "default";
         let app_conf  = this.get_app(app_label);
 
         // Transition to the next state

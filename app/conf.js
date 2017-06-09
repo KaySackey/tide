@@ -23,7 +23,7 @@ export class BasicStore extends BaseStore{
 class BasicLayout extends View {
     render(){
         return(
-          <div>{props.children}</div>
+          <div>{this.props.children}</div>
         )
     }
 }

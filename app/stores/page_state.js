@@ -1,4 +1,4 @@
-import {computed, observable} from "mobx";
+import {action, computed, observable} from "mobx";
 
 /**
  * Deals with page state & user state
@@ -117,6 +117,10 @@ export class PageStateStore {
               this.page_state.success(response);
               return response;
           }).catch(err => {
+              console.error(err);
+              
+              debugger;
+              
               this.page_state.failure(err);
               throw err;
           });
@@ -139,13 +143,13 @@ class InternalPageState {
     @observable.ref view      = null;
     @observable.ref layout    = null;
 
-    success(data) {
+    @action success(data) {
         this.data        = data;
         this.status      = "ok";
         this.last_update = new Date();
     }
 
-    failure(error) {
+    @action failure(error) {
         this.error  = error;
         this.status = "failed";
     }
