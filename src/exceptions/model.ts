@@ -1,18 +1,18 @@
-import {ExtendableError} from "exceptions";
+import {TideError} from "./base";
 
-export class QueryNotFound extends ExtendableError {
+export class QueryNotFound extends TideError {
     constructor(name) {
         super(`Query named ${name} was not found.`);
     }
 }
 
-export class InvalidQuery extends ExtendableError {
+export class InvalidQuery extends TideError {
     constructor(name) {
         super(`Query named ${name} was not found.`);
     }
 }
 
-export class QueryError extends ExtendableError {
+export class QueryError extends TideError {
     context: any;
 
     constructor(query, context) {
@@ -22,7 +22,7 @@ export class QueryError extends ExtendableError {
     }
 }
 
-export class MapperParsingException extends ExtendableError {
+export class MapperParsingException extends TideError {
     constructor() {
         super(`Could not properly serialize this object`);
     }

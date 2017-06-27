@@ -13,6 +13,7 @@ export class ExtendableError extends Error {
         }
     }
 }
+
 export class TideError extends ExtendableError {
     constructor(message) {
         super(message);
@@ -20,8 +21,10 @@ export class TideError extends ExtendableError {
 }
 
 export class ConfigurationError extends TideError { }
+
 export class InvalidResponse extends TideError {
     response : any;
+    name: string;
 
     constructor(response) {
         let status  = response.statusText || response.status;
@@ -31,5 +34,3 @@ export class InvalidResponse extends TideError {
         this.name = "InvalidResponse";
     }
 }
-
-export * from "./router/exceptions";

@@ -7,16 +7,16 @@
  * @private
  */
 export function deep_merge_mobx(target, obj) {
-    for (var key in obj) {
+    for (let key in obj) {
         // Escape if key isn't part local
         if (!Object.prototype.hasOwnProperty.call(obj, key)) {
             continue;
         }
 
-        var newVal = obj[key];
+        let newVal = obj[key];
 
 
-        if (!target[key]) {
+        if(!target[key]) {
             // The value isn't already existing
             target[key] = obj[key];
         }

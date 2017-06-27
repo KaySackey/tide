@@ -9,6 +9,6 @@ export const ContentTypes = {
 
 export const Credentials = {
     same_origin: 'same-origin',     // make include to send cookies on CORS requests too
-    include    : 'inlcude'
+    include    : 'include'
 };
 

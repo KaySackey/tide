@@ -1,6 +1,6 @@
 import {map as observableMap} from "mobx";
-import {bind_all_methods} from "utils";
-import {QueryNotFound} from "./exceptions";
+import {bind_all_methods} from "tide/utils";
+import {QueryNotFound} from "tide/exceptions";
 import {Query} from "./query";
 
 export class BaseStore {

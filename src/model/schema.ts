@@ -1,5 +1,4 @@
-import {serializable, list, object, createSimpleSchema, identifier, custom, PropSchema} from "serializr";
-import {observable, computed} from "mobx";
+import {createSimpleSchema, custom, list, object, PropSchema} from "serializr";
 
 export function simple(properties) {
     return createSimpleSchema(properties)
@@ -19,25 +18,25 @@ export function list_of(ObjectClass) {
  * @return {PropSchema}
  */
 export const jsonValue = (restrictionChecker?: (value: any) => string | undefined): PropSchema => {
-  const convert = (v: any, errorMessage: string) => {
-    if (restrictionChecker) {
-      const err =  restrictionChecker(v);
-      if (err !== undefined && err !== null) {
-        throw new Error(errorMessage + err);
-      }
-    }
-    return v;
-  };
+    const convert = (v: any, errorMessage: string) => {
+        if (restrictionChecker) {
+            const err = restrictionChecker(v);
+            if (err !== undefined && err !== null) {
+                throw new Error(errorMessage + err);
+            }
+        }
+        return v;
+    };
 
-  const modelToJson = (v: any) => {
-    return convert(v, 'serialization error: ');
-  };
+    const modelToJson = (v: any) => {
+        return convert(v, 'serialization error: ');
+    };
 
-  const jsonToModel = (v: any) => {
-    return convert(v, 'deserialization error: ');
-  };
+    const jsonToModel = (v: any) => {
+        return convert(v, 'deserialization error: ');
+    };
 
-  return custom(modelToJson, jsonToModel);
+    return custom(modelToJson, jsonToModel);
 };
 
 /**
@@ -46,14 +45,14 @@ export const jsonValue = (restrictionChecker?: (value: any) => string | undefine
  * @return {PropSchema}
  */
 export const jsonObject = (restrictionChecker?: (value: any) => string | undefined): PropSchema => {
-  const composedRestrictionChecker = (value: any) => {
-    if (typeof value !== 'object' || value === null || Array.isArray(value)) {
-      return 'not an object';
-    }
+    const composedRestrictionChecker = (value: any) => {
+        if (typeof value !== 'object' || value === null || Array.isArray(value)) {
+            return 'not an object';
+        }
 
-    if (restrictionChecker) return restrictionChecker(value);
-    return undefined;
-  };
+        if (restrictionChecker) return restrictionChecker(value);
+        return undefined;
+    };
 
-  return jsonValue(composedRestrictionChecker);
+    return jsonValue(composedRestrictionChecker);
 };

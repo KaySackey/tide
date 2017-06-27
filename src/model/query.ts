@@ -1,5 +1,5 @@
-import {Http} from "requests/http";
-import {QueryError} from "./exceptions";
+import {Http} from "tide/requests/http";
+import {QueryError} from "tide/exceptions";
 import {deserialize} from "serializr";
 import {action} from "mobx";
 

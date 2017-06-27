@@ -1,6 +1,6 @@
-import {DispatchError} from "../router/exceptions";
+import {DispatchError} from "tide/exceptions";
 import {runInAction} from "mobx";
-import {TideApp} from "../app/tide_app";
+import {TideApp} from "tide/app/tide_app";
 
 export class TideDispatcher {
     controller: TideApp;

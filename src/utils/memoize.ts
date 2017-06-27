@@ -13,7 +13,7 @@
     }
 
  */
-let memoized = new WeakMap();
+let memo = new WeakMap();
 function memoize(target, name, descriptor) {
   let getter = descriptor.get, setter = descriptor.set;
 
@@ -31,7 +31,7 @@ function memoize(target, name, descriptor) {
 }
 
 function memoizationFor(obj) {
-  let table = memoized.get(obj);
-  if (!table) { table = Object.create(null); memoized.set(obj, table); }
+  let table = memo.get(obj);
+  if (!table) { table = Object.create(null); memo.set(obj, table); }
   return table;
 }

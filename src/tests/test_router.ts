@@ -1,4 +1,4 @@
-import {Router} from "../src/router/router";
+import {Router} from "tide/router/router";
 
 class Store {
     show(params, matched_route){

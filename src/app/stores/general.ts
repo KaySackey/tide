@@ -1,7 +1,7 @@
 import {observable} from "mobx";
-import {User} from "model/user";
+import {User} from "tide/model/user";
 import {update} from "serializr";
-import {is_empty} from "utils/object";
+import {is_empty} from "tide/utils/object";
 /**
  * @class
  */

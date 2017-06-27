@@ -1,5 +1,5 @@
-import * as React from "react";
 import PropTypes from 'prop-types';
+import * as React from "react";
 
 
 export class Link extends React.Component {
@@ -79,10 +79,12 @@ export class Link extends React.Component {
 
     render() {
         // todo: have active class onlyActiveOnIndex / activeClassName
+        // Extra is added so we can just send props to anchor tag directly
+        // probably better to make anchorProps?
         let {to, params, children, activeClassName, onlyActiveOnIndex, ...extra} = this.props;
 
         return (
-            <a {...extra} href={this.url} onClick={this.handleClick}>{this.props.children}</a>
+            <a {...extra} href={this.url} onClick={this.handleClick}>{children}</a>
         )
     }
 }

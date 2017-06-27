@@ -38,10 +38,10 @@
     "allowUnreachableCode": false
   },
   "include": [
-    "*"
+    "src/*"
   ],
   "paths": {
-    "*": ["*"]
+    "tide": ["src/"]
   },
   "exclude": [
     "node_modules",

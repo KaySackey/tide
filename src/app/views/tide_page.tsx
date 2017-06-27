@@ -1,8 +1,8 @@
 //import DevTools from "mobx-react-devtools";
 import {computed} from "mobx";
+import {observer} from "mobx-react";
 import PropTypes from 'prop-types';
 import * as React from "react";
-import {MobxObserver} from ".../../base/base";
 import {InternalError} from "./errors";
 
 
@@ -10,7 +10,8 @@ import {InternalError} from "./errors";
  * Used by the TidePage to create a context for a displaying the current view in.
  * @class
  */
-export class TideWrapper extends MobxObserver {
+@observer
+export class TideWrapper extends React.Component<any, any> {
     static childContextTypes = {
         app: PropTypes.object,
         store: PropTypes.object
@@ -42,7 +43,8 @@ export class TideWrapper extends MobxObserver {
     }
 }
 
-export class TidePage extends MobxObserver {
+@observer
+export class TidePage extends React.Component<any, any> {
     static displayName = "Tide.Page";
 
     props: {
@@ -61,7 +63,7 @@ export class TidePage extends MobxObserver {
      * Compile the data into the current view.
      * It is safe to call at all stages of the render, because it will always return some kind of React.Component
      * even if its just a div to tell us that the page is loading.
-     * @returns {ReactElement|XML}
+     * @returns {ReactElement}
      */
     @computed
     get current_view() {
@@ -96,7 +98,7 @@ export class TidePage extends MobxObserver {
     /**
      * Ensure that we create a view with a React Element.
      * @private
-     * @param {XML|React.Component|React.Element|ReactElement} view
+     * @param {React.Component|React.Element|ReactElement} view
      * @param {*} props
      * @param {Array.<ReactElement>} children
      * @returns {ReactElement}

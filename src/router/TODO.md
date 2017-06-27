@@ -16,7 +16,7 @@ Todo: get url by applying history.createHref
 
   Name generation: can be pulled out into its own function
 
-   Other possibiliities for name gen
+   Other possibilities for name gen
    /**
     *
     * router(route, store.show_welcome)

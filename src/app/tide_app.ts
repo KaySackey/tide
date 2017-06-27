@@ -1,12 +1,11 @@
 import {action, computed} from "mobx";
-import {Router} from "router";
-import {bind_all_methods} from "utils";
+import {Router} from "tide/router";
+import {bind_all_methods} from "tide/utils";
 import {TideDispatcher} from "./dispatcher";
 import {page_state, PageStateStore} from "./stores/page_state";
 import {message_store, TideMessageStore} from "./stores/messages";
 import {general_store, GeneralStore} from "./stores/general";
-
-import {ConfigurationError} from "exceptions";
+import {ConfigurationError} from "tide/exceptions";
 
 export class TideApp {
 
@@ -259,7 +258,7 @@ export class TideApp {
      * A call to render will push the current view & data into the page state
      *
      * @param {RouteMatch} request
-     * @param {XML|ReactElement} view
+     * @param {ReactElement} view
      * @param {*|Promise} data
      */
     @action render(request, view, data) {

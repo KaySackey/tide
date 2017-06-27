@@ -1,10 +1,10 @@
-import {TideApp} from "app/tide_app";
+import {TideApp} from "tide/app/tide_app";
 import {computed} from "mobx";
-import {BaseStore} from "model/store";
+import {observer} from "mobx-react";
+import {BaseStore} from "tide/model/store";
 import * as PropTypes from "prop-types";
 import * as React from "react";
-import {bind_all_react_component_methods, use} from "../utils";
-import {MobxObserver} from "./base";
+import {bind_all_react_component_methods, use} from "tide/utils";
 import {BasicEventHandler} from "./events";
 
 
@@ -32,8 +32,8 @@ export const defaultContextTypes = {
 };
 
 
-
-export class RenderingContext extends MobxObserver implements BasicEventHandler{
+@observer
+export class RenderingContext extends React.Component<any, any> implements BasicEventHandler{
     static contextTypes = defaultContextTypes;
     static childContextTypes = defaultContextTypes;
     static displayName = "Tide.RenderingContext";

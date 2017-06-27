@@ -1,4 +1,4 @@
-import {InvalidResponse} from 'exceptions';
+import {InvalidResponse} from 'tide/exceptions';
 import {encode} from "./querystring";
 import {ContentTypes, Credentials} from "./types";
 import {debug_logging} from "./logging";
@@ -29,9 +29,7 @@ export function request(url, options) {
     if(url.includes('http')){
         absUrl = url;
     }else{
-        let start = '';
-
-        start = window.location.protocol + "//" + window.location.hostname;
+        let start = window.location.protocol + "//" + window.location.hostname;
         if(window.location.port){
             start = start + ":" + window.location.port;
         }

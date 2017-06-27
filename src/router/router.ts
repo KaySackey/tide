@@ -1,4 +1,4 @@
-import {DispatchError, RouterError} from "../exceptions";
+import {DispatchError, RouterError} from "tide/exceptions";
 import {default as crossroads} from "crossroads";
 import {default as createMemoryHistory} from "history/createMemoryHistory";
 import {default as createBrowserHistory} from "history/createBrowserHistory";
