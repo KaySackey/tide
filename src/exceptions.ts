@@ -3,8 +3,10 @@ export class ExtendableError extends Error {
         super(message);
         this.name    = this.constructor.name;
         this.message = message;
-        if ( typeof Error.captureStackTrace === 'function' ) {
-            Error.captureStackTrace(this, this.constructor);
+        const captureStackTrace = (Error as any).captureStackTrace;
+
+        if ( typeof captureStackTrace === 'function' ) {
+            captureStackTrace(this, this.constructor);
         }
         else {
             this.stack = (new Error(message)).stack;
@@ -19,6 +21,8 @@ export class TideError extends ExtendableError {
 
 export class ConfigurationError extends TideError { }
 export class InvalidResponse extends TideError {
+    response : any;
+
     constructor(response) {
         let status  = response.statusText || response.status;
         let message = `Status: ${status} on ${response.url}`;

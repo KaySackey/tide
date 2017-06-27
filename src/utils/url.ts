@@ -1,5 +1,3 @@
-import {dedent} from "./string";
-
 /**
  * Return a url to the endpoint
  *
@@ -22,9 +20,7 @@ export function path(pattern, params) {
     const replace_parameter = (func) => pattern.replace(/(:\w+)/ig, func);
     const throw_on_unmatched = (match, value) => {
         if (value === undefined){
-            let err_message = dedent(`Invalid Pattern 
-                                      Cannot find match ${match} for "${pattern}". 
-                                      Given parameters: ${JSON.stringify(params)}`);
+            let err_message = `Invalid Pattern Cannot find match ${match} for "${pattern}". Given parameters: ${JSON.stringify(params)}`;
             throw ReferenceError(err_message);
         }
     };

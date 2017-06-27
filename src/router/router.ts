@@ -4,10 +4,11 @@ import {default as createMemoryHistory} from "history/createMemoryHistory";
 import {default as createBrowserHistory} from "history/createBrowserHistory";
 import {Route} from "./route";
 
-/**
- * @class
- */
+
 export class Location {
+    pathname: string;
+    search: string;
+
     constructor(pathname, search) {
         this.pathname = pathname;
         this.search   = search;
@@ -24,21 +25,15 @@ export class Location {
 
 /**
  * Exports all the details about a route match so the controllers can deal with it.
- * @class
  */
 export class RouteMatch {
+    route: Route;
+    params: any;
+    location: string;
+
     constructor(route, params, location) {
-        /**
-         * @type {Route}
-         */
         this.route = route;
-        /**
-         * @type {object}
-         */
         this.params = params;
-        /**
-         * @type {Location}
-         */
         this.location = location;
     }
 
@@ -47,10 +42,10 @@ export class RouteMatch {
     }
 }
 
-/**
- * @class
- */
+
 export class BasicDispatcher {
+    controller: any;
+
     constructor(controller) {
         this.controller = controller;
     }
@@ -63,7 +58,7 @@ export class BasicDispatcher {
      * @param route
      * @throws {DispatchError} if the route cannot be validated
      */
-    validate(route) {
+    validate(route: Route) {
         let handler = route.handler;
         let name = route.name.trim();
 
@@ -97,7 +92,7 @@ export class BasicDispatcher {
      *
      * @throws DispatchError if there is any trouble handling the dispatch
      */
-    dispatch(matched_route) {
+    dispatch(matched_route: RouteMatch) {
         let route = matched_route.route;
         let params = matched_route.params;
         let handler = route.handler;
@@ -113,7 +108,7 @@ export class BasicDispatcher {
           `Dispatch expects the handler to be a string or function. It was ${JSON.stringify(handler)}`)
     }
 
-    _dispatch_on_string(matched_route) {
+    _dispatch_on_string(matched_route: RouteMatch) {
         // Default dispatching is to call the action on a given controller
         let controller            = this.controller;
         let route            = matched_route.route;
@@ -209,6 +204,20 @@ export class BasicDispatcher {
  *
  */
 export class Router {
+    //Todo: Finish typing
+    controller: any;
+    _initialized: any;
+    _routes: Map<string, Route>;
+    _current: any;
+    _history: any;
+    _history_disposer: any;
+    _basename: any;
+    verbosity: any;
+    dispatch_on_start: boolean;
+    crossroads: any;
+    dispatcher: any;
+    options: any;
+
     constructor(controller, passed_options) {
         let default_options = {
             dispatch: 'basic',
@@ -290,7 +299,7 @@ export class Router {
      *
      * @throws {DispatchError} if the route cannot be validated
      */
-    route(path, handler, options = {}) {
+    route(path, handler, options : any = {}) {
         let name = options.name;
 
         if(!name){
@@ -332,12 +341,12 @@ export class Router {
      * @throws RouterError if the route doesn't exist
      * @returns {Route}
      */
-    get(name){
+    get(name) : Route {
         if ( !this._routes.has(name) ) {
             throw new RouterError(`Route of >> ${name} << does not exist.`);
         }
 
-        return this._routes.get(name);
+        return this._routes.get(name) as Route;
     }
 
 
@@ -452,7 +461,7 @@ export class Router {
      * @param {string|null} action - Determines what to do with history.
      *      One of 'push' or 'replace'. If null, then the history will not be updated.
      */
-    go(url, action = 'push') {
+    go(url, action : (string|null) = 'push') {
         // Throw error if we are uninitialized
         this._must_be_initialized();
 
@@ -516,7 +525,7 @@ export class Router {
         let url      = route._crossroads.interpolate(params);
         this.go(url)
 
-        
+
     }
 
     /**
