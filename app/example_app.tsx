@@ -1,14 +1,19 @@
-import React from "react";
+import * as React from "react";
 import {action} from "mobx";
-import {View} from "tide/base/view";
-import {Link, IndexLink} from "tide/router";
-import {route} from "tide/router/route";
-import {BaseStore} from "tide/model/store";
-import {BasicApp} from "tide/app/conf";
+import {View} from "../base/view";
+import {Link, IndexLink} from "../router";
+import {route} from "../router/route";
+import {BaseStore} from "../model/store";
+import {BasicApp} from "../app/conf";
 
 /** Views **/
 export class Welcome extends View {
     static displayName = "Tide.Welcome";
+    props: {
+        title: string,
+        status: string
+    };
+
     render() {
         let {status, title} = this.props;
 
@@ -79,8 +84,8 @@ export class ExampleLayout extends View {
     render() {
         // Router configuration ignores dynamic routes under getChildRoutes or getIndexRoute.
         // Use getComponent or getComponents on your routes if you want code splitting
-        let status     = this.store.page_status;
-        let route_name = this.store.route_name;
+        let status     = this.tide.page_state.page_state;
+        let route_name = this.tide.page_state.route_name;
         console.log("[Tide Example] Rendering... ");
 
         return (

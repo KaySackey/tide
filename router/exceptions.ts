@@ -3,8 +3,10 @@ class ExtendableError extends Error {
         super(message);
         this.name    = this.constructor.name;
         this.message = message;
-        if ( typeof Error.captureStackTrace === 'function' ) {
-            Error.captureStackTrace(this, this.constructor);
+        const stackTraceFunction = (Error as any).captureStackTrace;
+
+        if ( typeof stackTraceFunction === 'function' ) {
+            stackTraceFunction(this, this.constructor);
         }
         else {
             this.stack = (new Error(message)).stack;

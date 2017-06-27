@@ -1,20 +1,21 @@
-import React from "react"; import PropTypes from 'prop-types';
+import * as React from "react"; import PropTypes from 'prop-types';
 import {action} from "mobx";
-import {use, bind_all_react_component_methods} from "tide/utils";
-import {MobxObserver} from "tide/base/base";
-import {BasicEventHandler} from "tide/base/events";
+import {use, bind_all_react_component_methods} from "../utils";
+import {MobxObserver} from "../base/base";
+import {BasicEventHandler} from "../base/events";
 import {TidePage} from "./views/tide_page";
 import {TideApp} from "./tide_app";
 import {app_conf as example_conf} from "./example_app";
 
 /**
- * @class
  *
  * React requires a top level component to kick off the rendering.
  * Look at TideApp to see the actual application of Tide. This is what is available as a 'tide' variable in your
  * apps, views and presenters.
  */
 export class Tide extends MobxObserver {
+    tide_app: TideApp;
+
     static displayName       = "Tide";
     static childContextTypes = {
         // Tide Bubbling
@@ -54,11 +55,14 @@ export class Tide extends MobxObserver {
     }
 
     @action componentWillMount() {
-        super.componentWillMount();
+        if(super.componentWillMount){
+            super.componentWillMount();
+        }
+
         this.tide_app.start();
 
         // Debugging
-        window.__debug__ = {
+        (window as any).__debug__ = {
             tide  : this.tide_app,
             router: this.tide_app.router,
             apps  : this.tide_app.apps,
@@ -72,7 +76,6 @@ export class Tide extends MobxObserver {
 
     /**
      * Render the presenter
-     * @returns {XML}
      */
     render() {
         return (

@@ -7,13 +7,13 @@ export class PageStateStore {
     /*
     States:
     - initial: nothing has been rendered, no data has been received, we are unsure of what application to use or what route to follow
-    
+
     - pending: we know what route & app to render, and are awaiting data, before rendering the view. Set internally by PageStateStore.process_transition
             - This is triggered as a result of the routing
             - todo: maybe rename to 'routing'
     - ok: view has rendered on the page, and we are waiting further user action
     - processing: view has been rendered but needs to be locked to interaction, in order to service a user request. called externally.
-    
+
      */
     @observable.ref page_state = new InternalPageState();
 
@@ -118,9 +118,9 @@ export class PageStateStore {
               return response;
           }).catch(err => {
               console.error(err);
-              
+
               debugger;
-              
+
               this.page_state.failure(err);
               throw err;
           });

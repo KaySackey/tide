@@ -1,5 +1,5 @@
 import * as requests from "./requests";
-import {path as utils_path} from "tide/utils";
+import {path as utils_path} from "utils";
 
 /***
  * Executes Queries over HTTP.
@@ -19,7 +19,7 @@ export class Http {
                 const q   = query;
                 const url = Http.path(q.endpoint, q.data);
                 let fetch_request;
-                
+
                 switch (q.method) {
                     case "get":
                         fetch_request = requests.get(url, q.data);
@@ -37,7 +37,7 @@ export class Http {
                         let err = ReferenceError(`Could not execute method ${query.method} of query ${query.name}`);
                         return reject(err)
                 }
-                
+
                 return resolve(fetch_request);
             }
             catch (err) {
@@ -45,7 +45,7 @@ export class Http {
             }
         })
     }
-    
+
     static path(pattern, params) {
         return utils_path(pattern, params)
     }

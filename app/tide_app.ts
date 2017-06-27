@@ -1,30 +1,40 @@
 import {action, computed} from "mobx";
-import {Router} from "tide/router";
-import {bind_all_methods} from "tide/utils";
+import {Router} from "router";
+import {bind_all_methods} from "utils";
 import {TideDispatcher} from "./dispatcher";
-import {page_state} from "./stores/page_state";
-import {message_store} from "./stores/messages";
-import {general_store} from "./stores/general";
+import {page_state, PageStateStore} from "./stores/page_state";
+import {message_store, TideMessageStore} from "./stores/messages";
+import {general_store, GeneralStore} from "./stores/general";
 
-import {ConfigurationError} from "tide/exceptions";
+import {ConfigurationError} from "exceptions";
 
-/**
- * @class
- */
 export class TideApp {
+
+    settings: {routes?: any, apps?: any};
+    basename: string;
+    mode: string;
+    presenter: any; // ReactComponent
+    page_state: PageStateStore;
+    _general_store: GeneralStore;
+    _apps: Map<string, any>;
+    dev_mode: boolean;
+    messages: TideMessageStore;
+    initial_data: any;
+    _router: Router;
+
     /**
      * @param  {Tide} presenter - the top level react component
      * @param {object} props - properties given to the presenter
      */
     constructor(presenter, props) {
         bind_all_methods(this);
-        
+
         this.settings                   = props.settings;
-        
+
         this.basename                   = props.basename;
         this.mode                       = props.mode;
         this.presenter                  = presenter;
-        
+
         this.page_state                 = page_state;
         this._general_store             = general_store;
         this._apps                      = new Map();
@@ -107,7 +117,7 @@ export class TideApp {
             // Set the completed app in our table
             this._apps.set(app_conf.name, app_conf);
         });
-        
+
         // Add Routes
         this.settings.routes.forEach((route) => {
             this.add_route(route)
@@ -121,16 +131,16 @@ export class TideApp {
             app_conf.ready(initial)
         })
     }
-    
+
     add_route(route){
         if(Array.isArray(route)){
             route.forEach((route) => {
                 this.add_route(route)
             });
-            
+
             return;
         }
-        
+
         this.router.set(route);
     }
 

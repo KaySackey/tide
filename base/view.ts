@@ -1,11 +1,13 @@
-import React from "react";
 import {RenderingContext} from "./context";
 
-/**
- * @class
- */
+
 export class View extends RenderingContext {
     static displayName = "Tide.View";
+
+    props: {
+        onAct?: (string) => void,
+        children?: any
+    };
 
     /**
      * Pulls a trigger, this should be overridden if you want to do something special.

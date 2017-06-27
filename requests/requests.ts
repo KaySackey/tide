@@ -1,10 +1,10 @@
-import {InvalidResponse} from 'tide/exceptions';
+import {InvalidResponse} from 'exceptions';
 import {encode} from "./querystring";
 import {ContentTypes, Credentials} from "./types";
 import {debug_logging} from "./logging";
 
 export const DefaultRequestOptions = {
-    'content_type': ContentTypes.content_type,
+    'content_type': ContentTypes.json,
     'method': 'GET',
     'cache': 'default',
     'mode': 'cors',
@@ -18,24 +18,28 @@ export const DefaultRequestOptions = {
 
 export function request(url, options) {
     let o = {...DefaultRequestOptions, ...options};
+    let absUrl;
 
     let headers = new Headers({
         "Content-Type": options.content_type,
         "Accept"      : options.content_type
     });
-    
-    if(!url.includes('http')){
+
+
+    if(url.includes('http')){
+        absUrl = url;
+    }else{
         let start = '';
-        
+
         start = window.location.protocol + "//" + window.location.hostname;
         if(window.location.port){
             start = start + ":" + window.location.port;
         }
-        
-        url = start + url;
+
+        absUrl = start + url;
     }
 
-    return fetch(url, {
+    return fetch(absUrl, {
         method     : o.method,
         mode       : o.mode,
         cache      : o.cache,

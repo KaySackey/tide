@@ -1,6 +1,13 @@
-// Todo: use warning.js to deprecation warnigns for triggers returning events
+// Todo: use warning.js to deprecation warnings for triggers returning events
 
 export class TideEvent {
+    name: string;
+    target: any;
+    details: any;
+    bubbles: boolean;
+    cancelable: boolean;
+    currentTarget: any;
+
     /*
      - name: what is this event called
      -  currentTarget—- representing whom the event handler has attached to (basically this if your event is being handled by the function you are in).
@@ -29,6 +36,13 @@ export class TideEvent {
     }
 }
 
+
+export interface IBasicEventHandler{
+    trigger(eventName: any, details?: any)
+    handleEvents(e: any)
+}
+
+
 /**
  *
  * Event's in Tide always bubble upwards in the component hierarchy, from child to parent, as determined by the
@@ -43,7 +57,10 @@ export class TideEvent {
  *
  *     send_message(){ ... do something ... }
  */
-export class BasicEventHandler {
+export class BasicEventHandler implements IBasicEventHandler{
+    trigger(eventName: any, details?: any){}
+    handleEvents(e: any){}
+
     /**
      * Trigger an event that will bubble up the component hierarchy till it is handled.
      * @param {string} eventName - By convention, the eventName must match the name of a function in a receiving

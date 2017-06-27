@@ -1,4 +1,4 @@
-import {Http} from "tide/requests/http";
+import {Http} from "requests/http";
 import {QueryError} from "./exceptions";
 import {deserialize} from "serializr";
 import {action} from "mobx";
@@ -42,10 +42,20 @@ export class Query {
      * @type {*|null}
      * @private
      */
-    _result = null;
+    _result?: any = null;
+
+    // Todo: Add types for meta
+    method: string;
+    endpoint: string;
+    expected?: any;
+    can_cancel: boolean;
+    data: any;
+    response: Promise<any>;
+    meta: any;
+
 
     constructor(data) {
-        const meta = this.constructor.meta;
+        const meta = (this as any).constructor.meta;
         this.method = meta.method;
         this.expected = meta.expected;
         this.endpoint = meta.endpoint;
@@ -70,7 +80,7 @@ export class Query {
         return null;
     }
 
-    get can_be_cached() {
+    get can_be_cached() : boolean {
         return this.meta.can_be_cached && this.cache_key !== null;
     }
 

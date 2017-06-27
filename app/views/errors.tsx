@@ -1,6 +1,6 @@
-import React from "react"; import PropTypes from 'prop-types';
-import {IndexLink} from "tide/router";
-import {View} from "tide/base/view";
+import * as React from "react"; import PropTypes from 'prop-types';
+import {IndexLink} from "router";
+import {View} from "base/view";
 
 export class InternalError extends View {
     static displayName = "Tide.InternalError";

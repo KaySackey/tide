@@ -1,20 +1,25 @@
-/**
- * @class Route
- */
+
 export class Route {
+    _basename: string;
+    _path: string;
+    _crossroads: any;
+    handler: any;
+    context: any;
+    name: any;
+
     /**
      * @param {string} name
      * @param {string} path
      * @param {string|Function} handler
      * @param {*} context
      */
-    constructor(name, path, handler, context = {}) {
+    constructor(name: string, path: string, handler: (string|any), context:any = {}) {
         /**
          * Name of the route. We can use this as a lookup key in the router.
          * @type {string}
          */
         this.name = name.trim();
-        
+
         /**
          * How to handle the route. It'll be up to the Dispatcher to actually take this value and do something with it
          *
@@ -27,36 +32,36 @@ export class Route {
         else {
             this.handler = handler;
         }
-        
+
         /**
          * A crossroads route instance
          * This will be set when we join the router
          * @private
          */
         this._crossroads = null;
-        
+
         /**
          * WIll be combined with basename to form true path
          * @type {string}
          * @private
          */
         this._path = path;
-        
-        
+
+
         /**
          * This will be set when we join the router
          * @type {string}
          * @private
          */
         this._basename = "";
-        
+
         this.context = context;
     }
-    
+
     set_basename(basename) {
         this._basename = basename || "";
     }
-    
+
     /**
      * Return the path
      * @returns {string}
@@ -64,7 +69,7 @@ export class Route {
     get path() {
         return this._basename + this._path;
     }
-    
+
     toString() {
         return `[Route] ${this.name} @ ${this.path}`;
     }
@@ -96,9 +101,9 @@ export class Route {
  *      route("/messages/unread/page/{page}/", controller.list_unread, "message_list_unread"),
  *
  */
-export function route(path, handler, context = {}) {
+export function route(path, handler, context: any = {}) {
     let name, route_context;
-    
+
     if ( typeof context === 'string' ) {
         name = context;
         route_context = {};
@@ -107,7 +112,7 @@ export function route(path, handler, context = {}) {
         route_context = context;
         name = context.name;
     }
-    
+
     // Derive name if it's not given
     if ( !name ) {
         if ( typeof handler === 'string' ) {
@@ -124,10 +129,10 @@ export function route(path, handler, context = {}) {
                 .replace(/_+$/, "");          // remove trailing _
         }
     }
-    
+
     route_context.name      = name;
     route_context.app_label = context.app_label || null;
-    
+
     return new Route(route_context.name, path, handler, route_context);
 }
 
@@ -145,7 +150,7 @@ export function include(path, routes, app_label = null) {
         route.context.app_label = route.context.app_label || app_label;
         route._path = path + route._path;
     }
-    
+
     return routes;
 }
 
@@ -160,6 +165,6 @@ export function route_react(path, react_component, options = {}) {
     let f_render = function (tide, request, params) {
         tide.render(request, react_component, params)
     };
-    
+
     return route(path, f_render, options)
 }

@@ -1,6 +1,7 @@
-import {serializable, list, object, identifier} from "serializr";
-import {observable, computed} from "mobx";
-import {simple, list_of} from "tide/model/schema";
+import {computed, observable} from "mobx";
+import {identifier, list, object, serializable} from "serializr";
+import {jsonObject, simple} from "./schema";
+
 
 export class Avatar {
     @serializable url;
@@ -8,8 +9,8 @@ export class Avatar {
 }
 
 const following_list = simple({
-    communities: list(),
-    users      : list()
+    communities: list(jsonObject()),
+    users: list(jsonObject())
 });
 
 
@@ -22,11 +23,12 @@ export class User {
     @serializable @observable is_moderator = false;
     @serializable @observable is_staff = false;
     @serializable(object(following_list)) @observable following;
-    @serializable(list()) @observable moderates = [];
+    @serializable(list(jsonObject())) @observable moderates = [];
 
     @serializable @observable _lookup;
 
-    @computed get is_anonymous() {
+    @computed
+    get is_anonymous() {
         return this.is_authenticated !== true;
     }
 }

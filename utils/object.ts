@@ -1,3 +1,13 @@
+
+interface ExtendedPropertyDescriptor extends PropertyDescriptor{
+    meta: {
+        name: string,
+        is_computed: boolean,
+        is_method: boolean
+    }
+}
+
+
 /**
  * Return all the non-constructor property descriptors of an object, including the inheritance chain
  * @param obj
@@ -5,18 +15,18 @@
  */
 function get_all_properties(obj) {
 
-    let names       = [];
-    let descriptors = [];
-    let curr        = obj;
+    let names       : string[] = [];
+    let descriptors : ExtendedPropertyDescriptor[] = [];
+    let curr        : any = obj;
 
     do {
-        let new_names =
+        let new_names : string[] =
               Object.getOwnPropertyNames(curr)
                 .filter((name) => names.includes(name) === false);
 
         let new_descriptors = new_names.map(name => {
             // Annotate useful meta data on the descriptor
-            let descriptor  = Object.getOwnPropertyDescriptor(curr, name);
+            let descriptor  = Object.getOwnPropertyDescriptor(curr, name) as ExtendedPropertyDescriptor;
             let is_computed = descriptor.get !== undefined || descriptor.set !== undefined;
             let is_method   = descriptor.value instanceof Function && !is_computed;
 

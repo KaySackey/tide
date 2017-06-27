@@ -1,4 +1,4 @@
-import {ExtendableError} from "tide/exceptions";
+import {ExtendableError} from "exceptions";
 
 export class QueryNotFound extends ExtendableError {
     constructor(name) {
@@ -13,6 +13,8 @@ export class InvalidQuery extends ExtendableError {
 }
 
 export class QueryError extends ExtendableError {
+    context: any;
+
     constructor(query, context) {
         super(`An error occurred on ${query.name}. ${context.error.message}`);
         this.context = context;

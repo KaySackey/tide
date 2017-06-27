@@ -1,16 +1,53 @@
-import React from "react"; import PropTypes from 'prop-types';
 //import DevTools from "mobx-react-devtools";
 import {computed} from "mobx";
-import {InternalError, NotFound} from "./errors";
-import {MobxObserver} from "tide/base/base";
-
+import PropTypes from 'prop-types';
+import * as React from "react";
+import {MobxObserver} from ".../../base/base";
+import {InternalError} from "./errors";
 
 
 /**
+ * Used by the TidePage to create a context for a displaying the current view in.
  * @class
  */
+export class TideWrapper extends MobxObserver {
+    static childContextTypes = {
+        app: PropTypes.object,
+        store: PropTypes.object
+    };
+
+    static displayName = "Tide.Wrapper";
+
+    static propTypes = {
+        app: PropTypes.object.isRequired,
+        store: PropTypes.object.isRequired,
+        layout_component: PropTypes.node.isRequired
+    };
+
+    props: {
+        app: any,
+        store: any,
+        layout_component: any
+    };
+
+    getChildContext() {
+        return {
+            app: this.props.app,
+            store: this.props.store
+        };
+    }
+
+    render() {
+        return <div>{this.props.layout_component}</div>
+    }
+}
+
 export class TidePage extends MobxObserver {
     static displayName = "Tide.Page";
+
+    props: {
+        tide: any
+    };
 
     get page_state() {
         return this.props.tide.page_state;
@@ -26,28 +63,29 @@ export class TidePage extends MobxObserver {
      * even if its just a div to tell us that the page is loading.
      * @returns {ReactElement|XML}
      */
-    @computed get current_view() {
+    @computed
+    get current_view() {
         const page_state = this.page_state;
 
-        let view       = page_state.view;
-        let data       = page_state.data;
-        let status     = page_state.status;
+        let view = page_state.view;
+        let data = page_state.data;
+        let status = page_state.status;
         let route_name = page_state.route_name;
         let last_update = page_state.last_update;
 
 
-        if ( !status ) {
+        if (!status) {
             return <div>[Tide] Waiting to initialize data store.</div>
         }
-        if ( !route_name ) {
+        if (!route_name) {
             return <div>[Tide] No route set.</div>
         }
 
-        if ( status === 'pending' ) {
+        if (status === 'pending') {
             return <div>[Tide] Loading page ... status: {status}</div>
         }
 
-        if(status === 'failed'){
+        if (status === 'failed') {
             return <div>[Tide] Attempting to load this page failed.</div>
         }
 
@@ -64,7 +102,7 @@ export class TidePage extends MobxObserver {
      * @returns {ReactElement}
      */
     _create_view(view, props, children) {
-        if ( React.isValidElement(view) ) {
+        if (React.isValidElement(view)) {
             return React.cloneElement(view, props, children);
         }
 
@@ -76,20 +114,20 @@ export class TidePage extends MobxObserver {
         const page_state = this.page_state;
 
         let route_name = page_state.route_name;
-        let app_label  = page_state.app_label;
-        let status     = page_state.status;
-        let view       = this.current_view;
+        let app_label = page_state.app_label;
+        let status = page_state.status;
+        let view = this.current_view;
         let last_update = page_state.last_update;
-        
+
         console.groupCollapsed(`[Tide][Render] [${status}] ${app_label} / ${route_name}`);
         console.info(`[Tide][Render] Updated @ ${last_update}`);
         console.info(`[Tide][Render] Route: ${route_name}`);
         console.info(`[Tide][Render] App: ${app_label}`);
         console.info(`[Tide][Render] Status: ${status}`);
         console.groupEnd();
-        
-        if(!route_name || !this.tide.has_app(app_label)){
-            return <InternalError />
+
+        if (!route_name || !this.tide.has_app(app_label)) {
+            return <InternalError/>
         }
 
         // Get Application Configuration for current view
@@ -97,12 +135,12 @@ export class TidePage extends MobxObserver {
         // is populated down to the View/Presenters that our render has returned
         let app_conf = this.tide.get_app(app_label);
 
-        let app    = app_conf.app;
-        let store  = app_conf.store;
+        let app = app_conf.app;
+        let store = app_conf.store;
         let layout = app_conf.layout;
-        
+
         let children = <div>
-            {view || <InternalError />}
+            {view || <InternalError/>}
             {/*{this.tide.dev_mode ? <DevTools /> : ""}*/}
         </div>;
 
@@ -110,36 +148,6 @@ export class TidePage extends MobxObserver {
 
         return <TideWrapper app={app}
                             store={store}
-                            layout_component={layout_component} />;
-    }
-}
-
-
-/**
- * Used by the TidePage to create a context for a displaying the current view in.
- * @class
- */
-export class TideWrapper extends MobxObserver{
-    static childContextTypes = {
-        app   : PropTypes.object,
-        store : PropTypes.object
-    };
-    static displayName = "Tide.Wrapper";
-
-    static propTypes = {
-        app   : PropTypes.object.isRequired,
-        store : PropTypes.object.isRequired,
-        layout_component: PropTypes.node.isRequired
-    };
-
-    getChildContext() {
-        return {
-            app: this.props.app,
-            store: this.props.store
-        };
-    }
-
-    render(){
-        return <div>{this.props.layout_component}</div>
+                            layout_component={layout_component}/>;
     }
 }

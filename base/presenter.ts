@@ -1,10 +1,9 @@
-import React from "react";
 import {RenderingContext} from "./context";
 
 export class Presenter extends RenderingContext {
     static displayName = "Tide.Presenter";
 
-    disposer = null;
+    disposer? = null;
 
     getChildContext() {
         return {
