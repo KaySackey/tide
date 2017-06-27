@@ -8,7 +8,7 @@ import {bind_all_react_component_methods, use} from "tide/utils";
 import {BasicEventHandler} from "./events";
 
 
-interface ITideContext {
+export interface ITideContext {
     // Tide Bubbling
     parent: object,
 

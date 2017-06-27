@@ -401,7 +401,7 @@ export class Router {
      *
      * @param {string} [start_url] - optional location to begin operating upon
      */
-    start(start_url) {
+    start(start_url?) {
         this._log(3, "Starting...");
         let location;
 
@@ -500,7 +500,7 @@ export class Router {
      * @throws Error if a parameter for creating the route isn't given
      * @returns {string}
      */
-    path(name, params) {
+    path(name, params = {}) {
         // Throw error if we are uninitialized
         this._must_be_initialized();
 

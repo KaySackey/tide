@@ -1,5 +1,5 @@
 import * as requests from "./requests";
-import {path as utils_path} from "utils";
+import {path as utils_path} from "tide/utils";
 
 /***
  * Executes Queries over HTTP.

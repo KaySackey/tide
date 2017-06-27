@@ -5,5 +5,7 @@ import "./utils/console.polyfill";
 export {Tide} from "./app/tide";
 export {View} from "./base/view";
 export {Presenter} from "./base/presenter";
+export {ITideContext} from "./base/context";
+
 // Exceptions
 export * from "./exceptions";
