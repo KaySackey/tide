@@ -1,60 +1,22 @@
-
 export class Route {
-    _basename: string;
+    // How to handle the route. It'll be up to the Dispatcher to actually take this value and do something with it
+    public handler: Function;
+    // Arbitrary compile-time data associated with this route. Handlers can make further use of this information.
+    public context: any;
+    // Name of the route. We can use this as a lookup key in the router.
+    public name: string;
+
+    // Basename to be prefixed to the route. This will be set when we join the router
+    _basename: string = "";
+    // Will be combined with basename to form true path
     _path: string;
-    _crossroads: any;
-    handler: any;
-    context: any;
-    name: any;
+    // A crossroads route instance. This will be set when we join the router
+    _crossroads: any = null;
 
-    /**
-     * @param {string} name
-     * @param {string} path
-     * @param {string|Function} handler
-     * @param {*} context
-     */
-    constructor(name: string, path: string, handler: (string|any), context:any = {}) {
-        /**
-         * Name of the route. We can use this as a lookup key in the router.
-         * @type {string}
-         */
+    constructor(name: string, path: string, handler: Function, context: any = {}) {
         this.name = name.trim();
-
-        /**
-         * How to handle the route. It'll be up to the Dispatcher to actually take this value and do something with it
-         *
-         * @property handler
-         * @type {string|function}
-         */
-        if ( typeof handler === 'string' ) {
-            this.handler = handler.trim();
-        }
-        else {
-            this.handler = handler;
-        }
-
-        /**
-         * A crossroads route instance
-         * This will be set when we join the router
-         * @private
-         */
-        this._crossroads = null;
-
-        /**
-         * WIll be combined with basename to form true path
-         * @type {string}
-         * @private
-         */
+        this.handler = handler;
         this._path = path;
-
-
-        /**
-         * This will be set when we join the router
-         * @type {string}
-         * @private
-         */
-        this._basename = "";
-
         this.context = context;
     }
 
@@ -62,15 +24,11 @@ export class Route {
         this._basename = basename || "";
     }
 
-    /**
-     * Return the path
-     * @returns {string}
-     */
-    get path() {
+    get path() : string {
         return this._basename + this._path;
     }
 
-    toString() {
+    toString() : string {
         return `[Route] ${this.name} @ ${this.path}`;
     }
 }
@@ -78,12 +36,10 @@ export class Route {
 /**
  * Helper to create a new route
  *
- * @returns {Route}
- * @param {string} path
- * @param {string|Function} handler
- * @param {*} context
- *      {string} app_label: Name of the application that this route runs under. This can be used for debugging purposes, or within a larger framework during
-  *                         rendering.  If not given, it will be null.
+ *      {string} app_label: Name of the application that this route runs under.
+ *                         This can be used for debugging purposes, or within a larger framework during
+ *                         rendering.  If not given, it will be null.
+ *
  *      {string} name: name of the route. If not given it will be derived via this algorithm:
  *
  *          1. If handler is a string we use it as the name
@@ -101,52 +57,46 @@ export class Route {
  *      route("/messages/unread/page/{page}/", controller.list_unread, "message_list_unread"),
  *
  */
-export function route(path, handler, context: any = {}) {
-    let name, route_context;
-
-    if ( typeof context === 'string' ) {
-        name = context;
-        route_context = {};
-    }
-    else {
-        route_context = context;
-        name = context.name;
-    }
+export function route(path, handler, name?: string, context?: any): Route {
+    let route_context;
+    let derived_name;
 
     // Derive name if it's not given
-    if ( !name ) {
-        if ( typeof handler === 'string' ) {
-            name = handler;
+    if (!name) {
+        if (typeof handler === 'string') {
+            derived_name = handler;
         }
-        else if ( handler instanceof Function && handler.name && !handler.isMobxAction ) {
+        else if (handler instanceof Function && handler.name && !handler.isMobxAction) {
             // Special case: we can't deal with mobX actions so we ignore the functions
-            name = handler.name.replace(/bound/g, "").trim();
+            derived_name = handler.name.replace(/bound/g, "").trim();
         }
         else {
-            name = path.replace(/[{}:]/g, "")         // remove id matches
-                .replace(/[\/]/g, "_")      // replace control characters with _
-                .replace(/^_/, "")           // remove leading _
-                .replace(/_+$/, "");          // remove trailing _
+            derived_name = path.replace(/[{}:]/g, "")         // remove id matches
+                .replace(/[\/]/g, "_")                // replace control characters with _
+                .replace(/^_/, "")                   // remove leading _
+                .replace(/_+$/, "");                 // remove trailing _
         }
     }
 
-    route_context.name      = name;
+    route_context = context || {};
+    route_context.name = name || derived_name;
     route_context.app_label = context.app_label || null;
 
     return new Route(route_context.name, path, handler, route_context);
 }
 
 /**
- * Helper to include a list of routes underneath a defined base path
+ * Helper to include a list of routes underneath a given path
+ * Returns a list of routes, annotated.
  *
- * @returns {Array<Route>}
- * @param {string} path
- * @param {Array<Route>} routes
- * @param {string} app_label - label of the application these routes belong to
+ * @param  path - path to nest under (e.g. /albums/verified/ )
+ * @param  routes - An array of routes
+ * @param  app_label - label of the application these routes belong to. This will override any app label the routes already have.
+ *
  * @throws {DispatchError} if the route cannot be validated*
  */
-export function include(path, routes, app_label = null) {
-    for (let route of routes) {
+export function include(path: string, routes: Route[], app_label : (string|null) = null) {
+    for (const route of routes) {
         route.context.app_label = route.context.app_label || app_label;
         route._path = path + route._path;
     }
@@ -156,15 +106,15 @@ export function include(path, routes, app_label = null) {
 
 /**
  * Shortcut to rendering a single React Component w/o having to write a controller function
- * @param path
- * @param react_component
- * @param options
- * @returns {Route}
  */
-export function route_react(path, react_component, options = {}) {
+export function route_component(path: string, react_component: React.ReactNode, name?: string, context: any = {}): Route {
     let f_render = function (tide, request, params) {
-        tide.render(request, react_component, params)
+        return tide.render(request, react_component, params)
     };
 
-    return route(path, f_render, options)
+    return route(path, f_render, name, context)
+}
+
+export function route404(handler){
+    return route("/{path*}", handler, "not_found");
 }

@@ -110,10 +110,10 @@ export class BasicDispatcher {
 
     _dispatch_on_string(matched_route: RouteMatch) {
         // Default dispatching is to call the action on a given controller
-        let controller            = this.controller;
+        let controller       = this.controller;
         let route            = matched_route.route;
         let params           = matched_route.params;
-        let handler_name     = route.handler.trim();
+        let handler_name     = route.handler.name.trim();
         let handler_function = controller[handler_name];
 
         // This is a regular object so we try to call .process() on it

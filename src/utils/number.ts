@@ -15,29 +15,29 @@ export function getRandomInt(min, max) {
 export function getRandomIntInclusive(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-//
-///**
-// * Create a number range from begin to end, at the following intervals
-// * @param begin
-// * @param end
-// * @param interval
-// * @return Array
-// */
-//
-//export function range(begin, end, interval = 1) {
-//    return Array.from(iter_range(begin, end, interval))
-//}
-//
-///**
-// * Create a number range from begin (inclusive) to end (inclusive), at the following intervals
-// * @param begin
-// * @param end
-// * @param interval
-// *
-// * Returns an iterator
-// */
-//export function* iter_range (begin, end, interval = 1) {
-//    for (let i = begin; i <= end; i += interval) {
-//        yield i;
-//    }
-//}
+
+/**
+* Create a number range from begin to end, at the following intervals
+* @param begin
+* @param end
+* @param interval
+* @return Array
+*/
+
+export function range(begin, end, interval = 1) {
+   return Array.from(iter_range(begin, end, interval))
+}
+
+/**
+* Create a number range from begin (inclusive) to end (inclusive), at the following intervals
+* @param begin
+* @param end
+* @param interval
+*
+* Returns an iterator
+*/
+export function* iter_range (begin, end, interval = 1) {
+   for (let i = begin; i <= end; i += interval) {
+       yield i;
+   }
+}

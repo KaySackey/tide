@@ -1,74 +1,38 @@
-import moment from 'moment';
-import 'moment/locale/en-gb';
-moment.locale('en-gb');
+import * as human_date from 'human-date';
 
-//import subtractHours from 'date-fns/sub_hours';
-//import startOfWeek from 'date-fns/start_of_week';
-//import startOfYear from 'date-fns/start_of_year';
-//import formatDate from 'date-fns/format';
-//import isBefore from 'date-fns/is_before';
+const ONE_HOUR = 60 * 60;
+const ONE_DAY = ONE_HOUR * 24;
 
 /**
  Returns date as a string
- - Up to 12 hours, it returns X hours ago. Or X hours Y minutes ago, etc.
- - Up to 48 hours, it returns Y days ago.
- - After that, it returns the exact date + time.
-
- Omits time after a certain point.
+ - Up to 8 days, it returns X hours ago. Or X hours Y minutes ago, etc.
+ - After that, it returns the exact date
 
  * @param {Date} a_date
  * @returns {string}
  */
-export function humanize_date(a_date) {
-    const date = moment(a_date);
+export function humanize_date(a_date: Date) {
+    const now : Date = new Date();
+    const diff_in_seconds = 1000 * Math.abs(now.getTime() - a_date.getTime());
 
-    // Within 6 hours
-    if (date > moment().subtract(22, 'hours')) {
-        return moment(date).fromNow();   // a few seconds ago... a minute ago ... X minutes ago ... an hour ago ... X hours ago ...
+    // Future Dates disallowed....
+    if(diff_in_seconds > 0){
+        return "now"
     }
 
-    // Within two days ago
-    if (date > moment().subtract(72, 'hours')) {
-        return moment(date).calendar();  // 2 days ago
+    // Less than 8 days ago
+    if(diff_in_seconds < 8 * ONE_DAY){
+        // E.g. 10 seconds ago
+        return human_date.relativeTime(-1 * diff_in_seconds)
     }
 
-    // Within this week
-    if (date > moment().startOf('week')) {
-        moment(date).format("dddd, h:mm:ss a");  // "Sunday, 3:25:50 pm"
+    // This year
+    if(a_date.getFullYear() === now.getMonth()){
+        // E.g. Jan 17
+        return `${human_date.monthName(a_date)} ${a_date.getDate()}`
     }
 
-    // Within this year
-    if (date > moment().startOf('year')) {
-        return moment(date).format("MMMM Do YYYY"); // "February 14th"
-    }
-
-    // Full format
-    return moment(date).format("MMMM Do YYYY"); // "February 14th, 2010"
-}
-
-/*
-  Same as humanize_date, but always prints time.
-  * @param {Date} a_date
-  * @returns {string}
-  */
-export function humanize_time(a_date) {
-    const date = moment(a_date);
-
-    // Within 6 hours
-    if (date > moment().subtract(48, 'hours')) {
-        moment(date).calendar();    // Today at 12:20 pm ... Yesterday at 12:20 pm
-    }
-
-    // Within this week
-    if (date > moment().startOf('week')) {
-        moment(date).format("dddd, h:mm:ss a");  // "Sunday, 3:25:50 pm"
-    }
-
-    // Within this year
-    if (date > moment().startOf('year')) {
-        return moment(date).format("MMMM Do YYYY, h:mm:ss a"); // "February 14th, 3:25:50 pm"
-    }
-
-    // Full format
-    return moment(date).format("MMMM Do YYYY, h:mm:ss a");  // February 14th 2010, 3:25:50 pm"
+    // Last year
+    // E.g. June 29th, 2016
+    return human_date.prettyDate();
 }

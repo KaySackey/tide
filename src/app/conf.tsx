@@ -12,7 +12,6 @@ export class BasicStore extends BaseStore {
 
 }
 
-
 class BasicLayout extends View {
     render() {
         return (
@@ -34,7 +33,7 @@ export class BasicConf {
         this.store = new BasicStore();
     }
 
-    ready() {
+    ready(any) : void {
         // this will be called by Tide *after* all apps are configured
     }
 }

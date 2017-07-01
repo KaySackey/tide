@@ -1,23 +1,43 @@
-import {map as observableMap} from "mobx";
-import {bind_all_methods} from "tide/utils";
+import {IMap, map as observableMap} from "mobx";
 import {QueryNotFound} from "tide/exceptions";
+import {bind_all_methods} from "tide/utils";
 import {Query} from "./query";
 
-export class BaseStore {
+declare interface IApplicationState {
     _meta: any;
     state: any;
+    cache: Map<string, any>;
+    bin: IMap<string, any>;
+    uninitialized: boolean;
+    queries: IMap<string, Query>;
+
+    has(string): boolean;
+    set(string, any): any;
+    get(string, default_value?: any): any;
+    counter(string): number;
+
+    incr(string, maximum?: number): number;
+    decr(string, minimum?: number): number;
+
+    go(name: string, data: any): Query;
+    get_cached(query: Query): (any | null);
+    set_cached(query: Query): Promise<any>;
+}
+
+
+export class BaseStore implements IApplicationState {
+    _meta: any;
+    state: any;
+    cache: Map<string, any> = new Map();
+    bin: any = observableMap();
+    uninitialized: boolean = true;
 
     static meta = {
         queries: new Map()
     };
 
-    cache: Map<any, any> = new Map();
-    bin: any = observableMap();
-    uninitialized: boolean = true;
-
     constructor() {
         bind_all_methods(this);
-
         this._meta = (this as any).constructor.meta;
     }
 
@@ -27,11 +47,11 @@ export class BaseStore {
     // then you can conditionally show data based on it
     // The bin is an observable so the view can react based on its values
 
-    has(key) {
+    has(key: string): boolean {
         return this.bin.has(key)
     }
 
-    set(key, value) {
+    set(key: string, value: any) {
         if (value === undefined) {
             throw new TypeError("Value in a store, cannot be set to undefined.")
         }
@@ -39,7 +59,7 @@ export class BaseStore {
         return this.bin.get(value);
     }
 
-    get(key, default_value? : any) {
+    get(key: string, default_value?: any) {
         if (!this.bin.has(key)) {
             return default_value;
         }
@@ -47,7 +67,7 @@ export class BaseStore {
         return this.bin.get(key);
     }
 
-    counter(key) {
+    counter(key: string) {
         return this.get(key, 0)
     }
 
@@ -73,10 +93,6 @@ export class BaseStore {
 
     go(name, data) {
         // Get a query
-        let query = (name instanceof Query) ? name : this.get_query(name, data);
-        // this.log_query(query, data);
-        return query.execute();
-
         // Get a response from cache w/ logging
         //        let response =
         //            this.log_query(query, data)
@@ -84,6 +100,9 @@ export class BaseStore {
 
         // Send it or execute a new one
         //return response || this.set_cached(query);
+
+        let query = (name instanceof Query) ? name : this.get_query(name, data);
+        return query.execute();
     }
 
     get_cached(query) {

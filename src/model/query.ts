@@ -54,7 +54,7 @@ export class Query {
     meta: any;
 
 
-    constructor(data) {
+    constructor(data? : any) {
         const meta = (this as any).constructor.meta;
         this.method = meta.method;
         this.expected = meta.expected;

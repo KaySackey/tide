@@ -72,8 +72,8 @@ export const routes = [
     // Because we are decorating our functions with @action, we need to specify the name
     // MobX will mangle the name down to 'res'
 
-    route("/welcome/{username}/", ExampleController.show_welcome, {name: 'show_welcome'}),
-    route("/404/", ExampleController.show_404, {name: 'show_404'})
+    route("/welcome/{username}/", ExampleController.show_welcome, 'show_welcome'),
+    route("/404/", ExampleController.show_404, 'show_404')
 ];
 
 
