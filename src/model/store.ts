@@ -16,8 +16,8 @@ declare interface IApplicationState {
     get(string, default_value?: any): any;
     counter(string): number;
 
-    incr(string, maximum?: number): number;
-    decr(string, minimum?: number): number;
+    increment(string, maximum?: number): number;
+    decrement(string, minimum?: number): number;
 
     go(name: string, data: any): Query;
     get_cached(query: Query): (any | null);
@@ -31,6 +31,8 @@ export class BaseStore implements IApplicationState {
     cache: Map<string, any> = new Map();
     bin: any = observableMap();
     uninitialized: boolean = true;
+
+    ui : any = {};
 
     static meta = {
         queries: new Map()
@@ -71,7 +73,7 @@ export class BaseStore implements IApplicationState {
         return this.get(key, 0)
     }
 
-    incr(key, maximum?) {
+    increment(key, maximum?) {
         let val = this.counter(key);
 
         if ((maximum !== undefined && maximum !== null) && val >= maximum) {
@@ -81,7 +83,7 @@ export class BaseStore implements IApplicationState {
         return this.set(key, val + 1)
     }
 
-    decr(key, minimum = 0) {
+    decrement(key, minimum = 0) {
         let val = this.counter(key);
 
         if ((minimum !== undefined && minimum !== null) && val <= minimum) {

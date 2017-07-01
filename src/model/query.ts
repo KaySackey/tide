@@ -29,7 +29,7 @@ export class Query {
 
     // Beware! Meta values are singletons!
     // You must assign them via a function
-    static meta = {
+    static meta : any = {
         can_cancel: false,
         can_be_cached: false,
         expected: null,

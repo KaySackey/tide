@@ -1,10 +1,11 @@
 import * as React from "react";
 import {View} from "../base/view";
 import {BaseStore} from "../model/store";
-
+import {TideApp} from "./tide_app";
 
 export class BasicApp {
-    // Nothing here
+    store : BaseStore; // will be set via Tide itself
+    tide : TideApp; // will be set via Tide itself
 }
 
 

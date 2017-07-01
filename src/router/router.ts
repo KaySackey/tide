@@ -1,10 +1,9 @@
 import {DispatchError, RouterError} from "tide/exceptions";
-import {default as crossroads} from "crossroads";
+import {default as crossroads, CrossRoadObject} from "crossroads";
 import {History as RouterHistory} from "history/index";
 import {default as createMemoryHistory} from "history/createMemoryHistory";
 import {default as createBrowserHistory} from "history/createBrowserHistory";
 import {Route} from "./route";
-import {CrossRoadObject} from "@types/crossroads";
 
 type ActionTypes = ("push" | "replace" | null);
 

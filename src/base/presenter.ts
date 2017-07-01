@@ -5,7 +5,7 @@ export class Presenter extends RenderingContext {
 
     disposer? = null;
 
-    getChildContext() {
+    getChildContext() : any {
         return {
             parent: this
         };
