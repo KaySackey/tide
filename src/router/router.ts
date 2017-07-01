@@ -1,9 +1,12 @@
 import {DispatchError, RouterError} from "tide/exceptions";
 import {default as crossroads} from "crossroads";
+import {History as RouterHistory} from "history/index";
 import {default as createMemoryHistory} from "history/createMemoryHistory";
 import {default as createBrowserHistory} from "history/createBrowserHistory";
 import {Route} from "./route";
+import {CrossRoadObject} from "@types/crossroads";
 
+type ActionTypes = ("push" | "replace" | null);
 
 export class Location {
     pathname: string;
@@ -23,10 +26,16 @@ export class Location {
     }
 }
 
-/**
- * Exports all the details about a route match so the controllers can deal with it.
- */
+enum Verbosity{
+    ERROR, WARN, INFO, DEBUG, LOG
+}
+
+
 export class RouteMatch {
+    /**
+     * Exports all the details about a route match so the controllers can deal with it.
+     */
+
     route: Route;
     params: any;
     location: string;
@@ -43,13 +52,11 @@ export class RouteMatch {
 }
 
 
-export class BasicDispatcher {
-    controller: any;
+export interface DispatcherConstructor{
+    new(controller : any) : Dispatcher;
+}
 
-    constructor(controller) {
-        this.controller = controller;
-    }
-
+export interface Dispatcher {
     /**
      *
      * Validate that we can dispatch upon this route
@@ -58,7 +65,33 @@ export class BasicDispatcher {
      * @param route
      * @throws {DispatchError} if the route cannot be validated
      */
+    validate(route: Route) : void;
+
+    /**
+     * Call the dispatch function.
+     *
+     * Required to fulfill the interface of a dispatcher.
+     *
+     * @param {RouteMatch} matched_route
+     *
+     * All of the above will be given to the dispatched function which must have a signature of
+     *
+     *      handler(Object: params, RouteMatch: route_match)
+     *
+     * @throws DispatchError if there is any trouble handling the dispatch
+     */
+    dispatch(matched_route: RouteMatch) : any
+}
+
+export class BasicDispatcher implements Dispatcher{
+    controller: any;
+
+    constructor(controller : any) {
+        this.controller = controller;
+    }
+
     validate(route: Route) {
+
         let handler = route.handler;
         let name = route.name.trim();
 
@@ -76,23 +109,8 @@ export class BasicDispatcher {
         }
     }
 
-    /**
-     * Call the dispatch function.
-     *
-     * If the dispatch function was a string, it will call the corresponding method on its controller.
-     * If the dispatcher was a function. It will call the function directly.
-     *
-     * Required to fulfill the interface of a dispatcher.
-     *
-     * @param {RouteMatch} matched_route
-     *
-     * All of the above will be given to the dispatched function which must have a signature of
-     *
-     *      handler(Object: params, RouteMatch: route_match)
-     *
-     * @throws DispatchError if there is any trouble handling the dispatch
-     */
     dispatch(matched_route: RouteMatch) {
+
         let route = matched_route.route;
         let params = matched_route.params;
         let handler = route.handler;
@@ -104,11 +122,14 @@ export class BasicDispatcher {
             handler.call(null, params, matched_route)
         }
 
-        return new DispatchError(
+        throw new DispatchError(
           `Dispatch expects the handler to be a string or function. It was ${JSON.stringify(handler)}`)
     }
 
     _dispatch_on_string(matched_route: RouteMatch) {
+        // Deprecated
+        // todo: remove
+
         // Default dispatching is to call the action on a given controller
         let controller       = this.controller;
         let route            = matched_route.route;
@@ -132,91 +153,98 @@ export class BasicDispatcher {
     }
 }
 
-/**
- *@class
- *
- * At its core the Router is a facade over Crossroads and History
- *
- * History listens to changes to the URL, so if the user manually edits the URL its caught then propagated to the
- * router first to see if a match can be found. When Crossroads dispatches on a route,
- * it'll tell History to update the browser URL or hash.
- *
- * Basic Usage.
- *
- * Initialize the router by passing it your controller, dispatch class and history.
- *
- * Default Dispatch class
- * -----
- * The default dispatch class is BasicDispatch
- * if you define your route with a string as the handler...
- *
- *      route("/welcome/", "show_welcome")
- *
- * Then it will call the corresponding method on the controller that you hav given.
- *
- * If the dispatcher is given as a function...
- *
- *      route("/welcome/", _ => console.log("Hi!")
- *
- * Then the dispatcher will call the function directly.
- *
- * In all cases, it will call the function with two parameters.
- * The first parameter is the list of matched parameters in the route.
- *      e.g.
- *           Given a route defined as:
- *              route("/hello/{name}/", "say_hello")
- *           On a match for the url:
- *              "/hello/Katie/"
- *           This will result in the say_hello method on your controller being called
- *           with the first parameter of {hello: "Katie"}
- *
- *  The second parameter is a RouteMatch object consisting of
- *      - route: the route that was matched { name, path, handler }
- *      - location: the location that was matched if given { pathname, search }
- *      - params: the parameters matched on this route
- *
- * If the dispatcher was a function. It will call the function directly.
- *
- * Default History
- * ----
- * If no history object is given. The default history one will be browser history.
- *
- *           import { createHistory } from 'history'
- *           const history = createHistory()
- *
- *
- * Normal Dispatch
- *
- *      This will push the current URL into history, and cause a dispatch to be sent.
- *      This is what Link does internally when it creates its anchors.
- *
- *      router.go(url)
- *
- * Internal Redirects
- *
- *      This will overwrite the current URL and not leave a record in the browser history.
- *
- *      router.redirect(name, params)
- *
- * External Redirects
- *
- *       Not supported. In the browser, use window.location to move to a URL without the router.
- *
- */
 export class Router {
-    //Todo: Finish typing
+    /**
+     *
+     * At its core the Router is a facade over Crossroads and History
+     *
+     * History listens to changes to the URL, so if the user manually edits the URL its caught then propagated to the
+     * router first to see if a match can be found. When Crossroads dispatches on a route,
+     * it'll tell History to update the browser URL or hash.
+     *
+     * Basic Usage.
+     *
+     * Initialize the router by passing it your controller, dispatch class and history.
+     *
+     * Default Dispatch class
+     * -----
+     * The default dispatch class is BasicDispatch
+     * if you define your route with a string as the handler...
+     *
+     *      route("/welcome/", "show_welcome")
+     *
+     * Then it will call the corresponding method on the controller that you hav given.
+     *
+     * If the dispatcher is given as a function...
+     *
+     *      route("/welcome/", _ => console.log("Hi!")
+     *
+     * Then the dispatcher will call the function directly.
+     *
+     * In all cases, it will call the function with two parameters.
+     * The first parameter is the list of matched parameters in the route.
+     *      e.g.
+     *           Given a route defined as:
+     *              route("/hello/{name}/", "say_hello")
+     *           On a match for the url:
+     *              "/hello/Katie/"
+     *           This will result in the say_hello method on your controller being called
+     *           with the first parameter of {hello: "Katie"}
+     *
+     *  The second parameter is a RouteMatch object consisting of
+     *      - route: the route that was matched { name, path, handler }
+     *      - location: the location that was matched if given { pathname, search }
+     *      - params: the parameters matched on this route
+     *
+     * If the dispatcher was a function. It will call the function directly.
+     *
+     * Default History
+     * ----
+     * If no history object is given. The default history one will be browser history.
+     *
+     *           import { createHistory } from 'history'
+     *           const history = createHistory()
+     *
+     *
+     * Normal Dispatch
+     *
+     *      This will push the current URL into history, and cause a dispatch to be sent.
+     *      This is what Link does internally when it creates its anchors.
+     *
+     *      router.go(url)
+     *
+     * Internal Redirects
+     *
+     *      This will overwrite the current URL and not leave a record in the browser history.
+     *
+     *      router.redirect(name, params)
+     *
+     * External Redirects
+     *
+     *       Not supported. In the browser, use window.location to move to a URL without the router.
+     *
+     */
+
     controller: any;
-    _initialized: any;
-    _routes: Map<string, Route>;
-    _current: any;
-    _history: any;
-    _history_disposer: any;
-    _basename: any;
-    verbosity: any;
-    dispatch_on_start: boolean;
-    crossroads: any;
+    _history: RouterHistory;
+
+    verbosity: Verbosity = Verbosity.ERROR;
+    _initialized: boolean = false;
+    _routes: Map<string, Route> = new Map();
+    _current: (RouteMatch | null) = null;
+    _history_disposer: (null|Function) = null;
+    _basename: (string | undefined);
+    dispatch_on_start: boolean = true;
+    crossroads: CrossRoadObject;
     dispatcher: any;
-    options: any;
+
+    options: {
+        dispatch: 'basic' | DispatcherConstructor,
+        history: 'guess' | RouterHistory,
+        verbosity: Verbosity,
+        dispatch_on_start: true,
+        basename: ""
+    };
 
     constructor(controller, passed_options) {
         let default_options = {
@@ -230,25 +258,10 @@ export class Router {
         let options = Object.assign(default_options, passed_options);
 
         this.controller        = controller;
-        this._initialized      = false;
-        this._routes           = new Map();
-        this._current          = null;
-        this._history_disposer = null;
         this._basename         = options.basename;
-
         this.verbosity         = options.verbosity;
         this.dispatch_on_start = options.dispatch_on_start;
 
-        /**
-         * @property {crossroads} crossroads
-         * @prop removeAllRoutes
-         * @prop addRoute
-         * @prop reset
-         * @prop create
-         * @prop NORM_AS_OBJECT
-         * @prop normalizeFn
-         * @prop parse
-         */
         this.crossroads             = crossroads.create();
         this.crossroads.normalizeFn = crossroads.NORM_AS_OBJECT;
 
@@ -277,7 +290,7 @@ export class Router {
                 this._history = createMemoryHistory();
                 break;
             default:
-                this._history = history;
+                throw Error(`History string was ${options.history}. Valid options are browser or server.`)
         }
     }
 
@@ -324,9 +337,8 @@ export class Router {
 
     /**
      * Set a route in the handler.
-     * @param {Route} route
      */
-    set(route){
+    set(route : Route){
         if(this._initialized){
             throw new RouterError(`You cannot add routes after initialization`);
         }
@@ -353,32 +365,29 @@ export class Router {
     /**
      * @returns {RouteMatch|null} the currently matched & active route
      */
-    get current() {
+    get current() : RouteMatch {
         return this._current;
     }
 
     /**
      * Return a history object.
      * See here: https://github.com/mjackson/history/blob/master/docs/Glossary.md#history
-     * @returns {History}
      */
-    get history() {
+    get history() : RouterHistory {
         return this._history;
     }
 
     /**
      * Return all the routes declared thus far as an array.
-     * @returns {Array.<Route>}
      */
-    get routes() {
+    get routes() : Route[] {
         return Array.from(this._routes.values());
     }
 
     /**
      * Get the number of routes in the crossroads instance
-     * @returns {routes}
      */
-    get number_of_routes(){
+    get number_of_routes() : number{
         return this.crossroads.getNumRoutes();
     }
 
@@ -401,7 +410,7 @@ export class Router {
      *
      * @param {string} [start_url] - optional location to begin operating upon
      */
-    start(start_url?) {
+    start(start_url? : string) {
         this._log(3, "Starting...");
         let location;
 
@@ -452,7 +461,7 @@ export class Router {
      * Generally this isn't needed, except for testing & hot-reloading.
      */
     reset(){
-        this.crossroads.reset();
+        this.crossroads.resetState();
     }
 
     /**
@@ -461,7 +470,7 @@ export class Router {
      * @param {string|null} action - Determines what to do with history.
      *      One of 'push' or 'replace'. If null, then the history will not be updated.
      */
-    go(url, action : (string|null) = 'push') {
+    go(url : string, action : ActionTypes = 'push') {
         // Throw error if we are uninitialized
         this._must_be_initialized();
 
@@ -486,7 +495,7 @@ export class Router {
      * @param {Location} location
      * @throws DispatchError if there was an error dispatching the route.
      */
-    dispatch(route, params, location) {
+    dispatch(route : Route, params : any, location : Location) {
         this._log(2, `Dispatching ${route.name} to >> `, route.handler);
         this._current = new RouteMatch(route, params, location);
         this.dispatcher.dispatch(this._current);
@@ -500,7 +509,7 @@ export class Router {
      * @throws Error if a parameter for creating the route isn't given
      * @returns {string}
      */
-    path(name, params = {}) {
+    path(name: string, params: any = {}) {
         // Throw error if we are uninitialized
         this._must_be_initialized();
 
@@ -514,7 +523,7 @@ export class Router {
      *
      * @throws RouterError if the route isn't found
      */
-    go_to(name, params) {
+    go_to(name: string, params: any = {}) {
         // Throw error if we are uninitialized
         this._must_be_initialized();
 
@@ -524,8 +533,6 @@ export class Router {
         // url includes query strings if they were defined as part of the route
         let url      = route._crossroads.interpolate(params);
         this.go(url)
-
-
     }
 
     /**
@@ -534,7 +541,7 @@ export class Router {
      *
      * @throws RouterError if the route isn't found
      */
-    redirect(name, params) {
+    redirect(name: string, params: any = {}) {
         // Throw error if we are uninitialized
         this._must_be_initialized();
 
@@ -560,7 +567,7 @@ export class Router {
      *
      * @throws RouterError if the route isn't found
      */
-    update(name, params){
+    update(name: string, params: any = {}){
         // Throw error if we are uninitialized
         this._must_be_initialized();
 
@@ -582,9 +589,8 @@ export class Router {
      *
      * @param url
      * @returns {Location}
-     * @private
      */
-    _location_from_url(url) {
+    protected _location_from_url(url : string) {
         let pathname = url;
         let search   = "";
 
@@ -606,9 +612,8 @@ export class Router {
 
     /**
      * @throws RouterError if router is not initialized
-     * @private
      */
-    _must_be_initialized(){
+    protected _must_be_initialized(){
         if(!this._initialized){
             throw new RouterError(`Router is not initialized. Please run router.start() after adding routes.`);
         }
@@ -616,10 +621,8 @@ export class Router {
 
     /**
      * Returns true if we have a valid BrowserDOM
-     * @returns {boolean}
-     * @private
      */
-    get _has_document_model(){
+    protected get _has_document_model() : boolean{
         return typeof window !== 'undefined'
                 && window.document !== undefined
                 && window.document.documentElement !== undefined;
@@ -631,7 +634,7 @@ export class Router {
      * Then we create route matches for them in crossroads.
      * @private
      */
-    _initialize() {
+    protected _initialize() {
         if ( this._initialized ) {
             return;
         }
@@ -664,20 +667,9 @@ export class Router {
      * Crossroads thinks its supposed to dispatch; but we want to take over that.
      * So we create a function here that'll just callback into us with enough information
      * to make a proper dispatch
-     *
-     * @param route
-     * @returns {function()}
-     * @private
      */
-    _make_crossroads_shim(route){
-        /**
-         * @function
-         * @private
-         * @param action
-         * @param location
-         * @param params
-         */
-        return (action, location, params) => {
+    protected _make_crossroads_shim(route){
+        return (action : ActionTypes, location : Location, params : any) => {
                     if(action === 'push'){
                         this.history.push(location);
                     }else if(action === 'replace'){
@@ -693,7 +685,7 @@ export class Router {
      * @param verbosity {number} : verbosity setting of message
      * @param {string} messages
      */
-    _log(verbosity, ...messages) {
+    protected _log(verbosity : number, ...messages) {
         if ( this.verbosity >= verbosity ) {
             let logger;
             switch(verbosity){

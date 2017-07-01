@@ -7,8 +7,6 @@
     "sourceMap": true,
     "removeComments": true,
     "noEmit": true,
-    "types" : ["react"],
-    "typeRoots" : ["./typings"],
     "lib": [
       "dom",
       "es2015",

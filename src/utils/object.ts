@@ -80,7 +80,7 @@ export function bind_all_react_component_methods(obj) {
 
 
 // Check if object, string, or collection is empty
-export function is_empty(obj) {
+export function is_empty(obj : (object | string | any[])) : boolean {
     if ( typeof obj === "string" ) {
         return obj === "";
     }

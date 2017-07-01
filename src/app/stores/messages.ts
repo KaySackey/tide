@@ -1,8 +1,6 @@
 import {observable} from "mobx";
 
-/**
- * @class
- */
+
 export class TideMessage {
     expiry: number;
     message: string;
@@ -15,9 +13,6 @@ export class TideMessage {
     }
 }
 
-/**
- * @class
- */
 export class TideMessageStore {
     @observable _messages : Array<TideMessage> = [];
 

@@ -3,30 +3,30 @@ import {QueryError} from "tide/exceptions";
 import {deserialize} from "serializr";
 import {action} from "mobx";
 
-/**
- *  An object that represents a query to the backend database.
- *  In this current case, all our queries happen over a kind of JSON-RPC via HTTP.
- *
- *  @class
- *  @example
- *  class ModifyUser extends Query {
- *     static meta = {
- *         expected  : {},
- *         endpoint  : "/users/modify_all",
- *         method    : "put"
- *     };
- *
- *     method   = "put";
- *     data     = {};
- *     expected = {};
- *
- *     constructor(data) {
- *         super(data);
- *         // can do stuff to massage in the data
- *    }
- *  }
- */
 export class Query {
+    /**
+     *  An object that represents a query to the backend database.
+     *  In this current case, all our queries happen over a kind of JSON-RPC via HTTP.
+     *
+     *  @example
+     *  class ModifyUser extends Query {
+     *     static meta = {
+     *         expected  : {},
+     *         endpoint  : "/users/modify_all",
+     *         method    : "put"
+     *     };
+     *
+     *     method   = "put";
+     *     data     = {};
+     *     expected = {};
+     *
+     *     constructor(data) {
+     *         super(data);
+     *         // can do stuff to massage in the data
+     *    }
+     *  }
+     */
+
     // Beware! Meta values are singletons!
     // You must assign them via a function
     static meta = {

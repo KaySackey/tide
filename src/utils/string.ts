@@ -1,4 +1,4 @@
-export const capitalize_first = (a_string) => {
+export function capitalize_first(a_string) {
     return a_string.charAt(0).toUpperCase() + a_string.slice(1);
 };
 
@@ -10,7 +10,7 @@ export function capitalize_words(text)  {
     });
 }
 
-export function slugify (text){
+export function slugify(text){
     return text.replace(/[^\w\s]+/ig, '').replace(/\s+/gi, "-").toLowerCase();
 }
 

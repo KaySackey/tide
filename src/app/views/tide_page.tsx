@@ -6,12 +6,13 @@ import * as React from "react";
 import {InternalError} from "./errors";
 
 
-/**
- * Used by the TidePage to create a context for a displaying the current view in.
- * @class
- */
+
 @observer
 export class TideWrapper extends React.Component<any, any> {
+    /**
+     * Used by the TidePage to create a context for a displaying the current view in.
+     */
+
     static childContextTypes = {
         app: PropTypes.object,
         store: PropTypes.object

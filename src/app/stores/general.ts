@@ -2,9 +2,8 @@ import {observable} from "mobx";
 import {User} from "tide/model/user";
 import {update} from "serializr";
 import {is_empty} from "tide/utils/object";
-/**
- * @class
- */
+
+
 export class GeneralStore {
     @observable user = new User();
 
