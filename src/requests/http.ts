@@ -1,10 +1,20 @@
-import * as requests from "./requests";
+import axios, {AxiosPromise} from 'axios';
+import {ContentTypes} from "./constants";
 import {path as utils_path} from "tide/utils";
 
-/***
- * Executes Queries over HTTP.
- * This is essentially JSON-RPC due to it using tide.requests
- */
+let log_to_console = true;//(process.env.NODE_ENV === 'development');
+
+const requests = axios.create({
+    baseURL: 'https://dev.luscious.net:4000/', // todo pull from config?
+    timeout: 1000,
+    headers: {
+        "Content-Type": ContentTypes.json,
+        "Accept": ContentTypes.json,
+        'X-Requested-With': 'XMLHttpRequest'
+    },
+    withCredentials: true
+});
+
 export class Http {
     /**
      * Execute a given query, using its url and data.
@@ -13,30 +23,16 @@ export class Http {
      * @returns {Promise}
      * @throws ReferenceError - If you use a method apart from get/post/put/delete
      */
-    static execute(query) {
+     static execute(query): AxiosPromise {
         return new Promise((resolve, reject) => {
             try {
-                const q   = query;
-                const url = Http.path(q.endpoint, q.data);
-                let fetch_request;
+                const {method, name, data, endpoint} = query;
+                const url = Http.path(endpoint, data);
 
-                switch (q.method) {
-                    case "get":
-                        fetch_request = requests.get(url, q.data);
-                        break;
-                    case "post":
-                        fetch_request = requests.post(url, q.data);
-                        break;
-                    case "put":
-                        fetch_request = requests.put(url, q.data);
-                        break;
-                    case "delete":
-                        fetch_request = requests.del(url);
-                        break;
-                    default:
-                        let err = ReferenceError(`Could not execute method ${query.method} of query ${query.name}`);
-                        return reject(err)
-                }
+                const fetch_request =
+                    Http._request(url, method, name, data)
+                        .then(Http.debug_logging)
+                        .then(Http.parse_response);
 
                 return resolve(fetch_request);
             }
@@ -45,6 +41,67 @@ export class Http {
             }
         })
     }
+
+    static _request(url: string, method: string, name: string, data: any) : AxiosPromise {
+        let fetch_request;
+
+        switch (method) {
+            case "get":
+                fetch_request = requests.get(url, {
+                    params: data
+                });
+                break;
+            case "post":
+                fetch_request = requests.post(url, data);
+                break;
+            case "put":
+                fetch_request = requests.put(url, data);
+                break;
+            case "head":
+                fetch_request = requests.head(url, {
+                    params: data
+                });
+                break;
+            case "patch":
+                fetch_request = requests.patch(url, data);
+                break;
+            case "delete":
+                fetch_request = requests.delete(url);
+                break;
+            default:
+                throw new ReferenceError(`Could not execute method ${method} of query ${name}`);
+        }
+
+        return fetch_request;
+    }
+
+    static parse_response(response) {
+        /*
+        Transform from AxiosResponse to a regular HTML5 Standard response
+         */
+        // let body = response.body || JSON.stringify(response.data);
+        // return new Response(body, {
+        //             status: response.status,
+        //             statusText: response.statusText,
+        //             headers: new Headers(response.headers)
+        //         })
+
+        // Whelp! can't do that... so we're going to just return raw json
+        return response.data
+    }
+
+    static debug_logging(response) {
+        if (log_to_console) {
+            console.debug("Request Returned", {
+                // 'ContentType': response.headers.get('content-Type'),
+                'Status'     : response.status,
+                "StatusText" : response.statusText
+            });
+        }
+
+        return response;
+    }
+
 
     static path(pattern, params) {
         return utils_path(pattern, params)
