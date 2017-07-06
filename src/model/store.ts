@@ -1,4 +1,4 @@
-import {IMap, map as observableMap} from "mobx";
+import * as mobx from "mobx";
 import {QueryNotFound} from "tide/exceptions";
 import {bind_all_methods} from "tide/utils";
 import {Query} from "./query";
@@ -7,9 +7,9 @@ declare interface IApplicationState {
     _meta: any;
     state: any;
     cache: Map<string, any>;
-    bin: IMap<string, any>;
+    bin: mobx.IMap<string, any>;
     uninitialized: boolean;
-    queries: IMap<string, Query>;
+    queries: mobx.IMap<string, Query>;
 
     has(string): boolean;
     set(string, any): any;
@@ -29,7 +29,7 @@ export class BaseStore implements IApplicationState {
     _meta: any;
     state: any;
     cache: Map<string, any> = new Map();
-    bin: any = observableMap();
+    bin: any = mobx.observable.map();
     uninitialized: boolean = true;
 
     ui : any = {};

@@ -1,5 +1,5 @@
 import * as React from "react";
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import {observer} from "mobx-react";
 import {action} from "mobx";
 import {use, bind_all_react_component_methods} from "../utils";

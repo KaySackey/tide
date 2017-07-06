@@ -1,5 +1,5 @@
 import {DispatchError, RouterError} from "tide/exceptions";
-import {default as crossroads, CrossRoadObject} from "crossroads";
+import * as crossroads from "crossroads";
 import {History as RouterHistory} from "history/index";
 import {default as createMemoryHistory} from "history/createMemoryHistory";
 import {default as createBrowserHistory} from "history/createBrowserHistory";
@@ -234,7 +234,7 @@ export class Router {
     _history_disposer: (null|Function) = null;
     _basename: (string | undefined);
     dispatch_on_start: boolean = true;
-    crossroads: CrossRoadObject;
+    crossroads: any;
     dispatcher: any;
 
     options: {

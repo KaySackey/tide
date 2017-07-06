@@ -8,10 +8,22 @@ const ONE_DAY = ONE_HOUR * 24;
  - Up to 8 days, it returns X hours ago. Or X hours Y minutes ago, etc.
  - After that, it returns the exact date
 
- * @param {Date} a_date
+ * @param {Date} input
  * @returns {string}
  */
-export function humanize_date(a_date: Date) {
+export function humanize_date(input: Date | number) {
+    let a_date : Date;
+
+    if(!input){
+        return "?"
+    }
+    if(typeof input === "number"){
+        // Assume time in seconds
+        a_date = new Date(input)
+    }else{
+        a_date = input as Date;
+    }
+
     const now : Date = new Date();
     const diff_in_seconds = 1000 * Math.abs(now.getTime() - a_date.getTime());
 

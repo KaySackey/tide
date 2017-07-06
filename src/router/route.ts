@@ -80,7 +80,7 @@ export function route(path, handler, name?: string, context?: any): Route {
 
     route_context = context || {};
     route_context.name = name || derived_name;
-    route_context.app_label = context.app_label || null;
+    route_context.app_label = route_context.app_label || null;
 
     return new Route(route_context.name, path, handler, route_context);
 }

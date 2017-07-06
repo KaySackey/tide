@@ -1,6 +1,5 @@
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import * as React from "react";
-
 
 export class Link extends React.Component {
     constructor(props) {

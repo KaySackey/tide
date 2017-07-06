@@ -1,7 +1,7 @@
 //import DevTools from "mobx-react-devtools";
 import {computed} from "mobx";
 import {observer} from "mobx-react";
-import PropTypes from 'prop-types';
+import * as PropTypes from 'prop-types';
 import * as React from "react";
 import {InternalError} from "./errors";
 
