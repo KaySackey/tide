@@ -8,7 +8,6 @@ declare interface IApplicationState {
     state: any;
     cache: Map<string, any>;
     bin: mobx.IMap<string, any>;
-    uninitialized: boolean;
     queries: mobx.IMap<string, Query>;
 
     has(string): boolean;
@@ -30,7 +29,6 @@ export class BaseStore implements IApplicationState {
     state: any;
     cache: Map<string, any> = new Map();
     bin: any = mobx.observable.map();
-    uninitialized: boolean = true;
 
     ui : any = {};
 
@@ -128,7 +126,6 @@ export class BaseStore implements IApplicationState {
             return response;
         });
     }
-
 
     get_query(name, data) {
         if (!this.queries.has(name)) {

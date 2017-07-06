@@ -4,8 +4,8 @@ import {BaseStore} from "../model/store";
 import {TideApp} from "./tide_app";
 
 export class BasicApp {
-    store : BaseStore; // will be set via Tide itself
-    tide : TideApp; // will be set via Tide itself
+    store: BaseStore; // will be set via Tide itself
+    tide: TideApp; // will be set via Tide itself
 }
 
 
@@ -22,19 +22,23 @@ class BasicLayout extends View {
 }
 
 export class BasicConf {
-    name : string | null;
+    name: string | null;
+    verbose_name: string;
+
     app: object;
     store: BaseStore;
     layout: any;
 
     constructor() {
-        this.name = null;
+        this.name = this.name || this.constructor.name;
+        this.verbose_name = this.verbose_name || this.name;
+
         this.layout = BasicLayout;
         this.app = new BasicApp();
         this.store = new BasicStore();
     }
 
-    ready(any) : void {
+    ready(data: any): void {
         // this will be called by Tide *after* all apps are configured
     }
 }

@@ -1,11 +1,9 @@
-//import DevTools from "mobx-react-devtools";
 import {computed} from "mobx";
 import {observer} from "mobx-react";
 import * as PropTypes from 'prop-types';
 import * as React from "react";
+import {TideApp} from "tide/app/tide_app";
 import {InternalError} from "./errors";
-
-
 
 @observer
 export class TideWrapper extends React.Component<any, any> {
@@ -49,7 +47,7 @@ export class TidePage extends React.Component<any, any> {
     static displayName = "Tide.Page";
 
     props: {
-        tide: any
+        tide: TideApp
     };
 
     get page_state() {
@@ -64,7 +62,6 @@ export class TidePage extends React.Component<any, any> {
      * Compile the data into the current view.
      * It is safe to call at all stages of the render, because it will always return some kind of React.Component
      * even if its just a div to tell us that the page is loading.
-     * @returns {ReactElement}
      */
     @computed
     get current_view() {
@@ -74,8 +71,6 @@ export class TidePage extends React.Component<any, any> {
         let data = page_state.data;
         let status = page_state.status;
         let route_name = page_state.route_name;
-        let last_update = page_state.last_update;
-
 
         if (!status) {
             return <div>[Tide] Waiting to initialize data store.</div>
@@ -98,13 +93,8 @@ export class TidePage extends React.Component<any, any> {
 
     /**
      * Ensure that we create a view with a React Element.
-     * @private
-     * @param {React.Component|React.Element|ReactElement} view
-     * @param {*} props
-     * @param {Array.<ReactElement>} children
-     * @returns {ReactElement}
      */
-    _create_view(view, props, children) {
+    private _create_view(view: React.ComponentClass<any>, props: any, children: React.ReactNode): React.ReactElement<any> {
         if (React.isValidElement(view)) {
             return React.cloneElement(view, props, children);
         }
@@ -135,7 +125,7 @@ export class TidePage extends React.Component<any, any> {
 
         // Get Application Configuration for current view
         // We'll put store/app in a wrapper at the end so the context
-        // is populated down to the View/Presenters that our render has returned
+        // is populated down to the View that our render has returned
         let app_conf = this.tide.get_app(app_label);
 
         let app = app_conf.app;

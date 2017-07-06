@@ -1,10 +1,10 @@
 import * as React from "react";
 import {action} from "mobx";
-import {View} from "../base/view";
-import {Link, IndexLink} from "../router";
-import {route} from "../router/route";
-import {BaseStore} from "../model/store";
-import {BasicApp} from "../app/conf";
+import {View} from "tide/index";
+import {Link, IndexLink} from "tide/router";
+import {route} from "tide/router/route";
+import {BaseStore} from "tide/model/store";
+import {BasicApp} from "tide/app/conf";
 
 /** Views **/
 export class Welcome extends View {

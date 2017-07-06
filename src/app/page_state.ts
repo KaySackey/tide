@@ -1,10 +1,10 @@
 import {action, computed, observable} from "mobx";
 
-/**
- * Deals with page state & user state
- */
 export class PageStateStore {
     /*
+    Deals with page state & user state
+
+
     States:
     - initial: nothing has been rendered, no data has been received, we are unsure of what application to use or what route to follow
 
@@ -45,16 +45,7 @@ export class PageStateStore {
     }
 
     /**
-     * Return
-     * @returns {string} - one of pending, done, failed
-     */
-    @computed get page_status() {
-        return this.page_state.status;
-    }
-
-    /**
      * Return the name of the current route being displayed
-     * @returns {string}
      */
     @computed get route_name() {
         return this.page_state.route_name;
@@ -94,9 +85,8 @@ export class PageStateStore {
      * @param app_conf
      * @param view
      * @param data
-     * @returns {*}
      */
-    process_transition(route, app_conf, view, data) {
+    process_transition(route, app_conf, view, data) : Promise<any> {
         this.page_state.layout     = app_conf.layout;
         this.page_state.app_label  = app_conf.name;
         this.page_state.route_name = route.name;
@@ -154,6 +144,3 @@ class InternalPageState {
         this.status = "failed";
     }
 }
-
-
-export const page_state = new PageStateStore();

@@ -1,4 +1,4 @@
-Tide is a Model-View-Presenter framework for quickly building client-side applications with React and MobX.
+Tide is a applicaiton framework for quickly building client-side applications with React and MobX.
 
 
 
@@ -17,7 +17,7 @@ Event Bubbling
     - router: PropTypes.object
     - tide: PropTypes.object
 
-Components: View/Presenter
+Components: View
   - Autobinds the methods
 
 Requests

@@ -67,6 +67,9 @@ export class RenderingContext extends React.Component<any, any> implements Basic
         return this.context.parent;
     }
 
+    get actions(){
+        return this.app.actions;
+    }
 
     get app(): any {
         if (!this.context.app) {

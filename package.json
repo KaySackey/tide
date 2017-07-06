@@ -2,7 +2,7 @@
   "name": "tide",
   "version": "1.0.0-dev.15",
   "registry": "github",
-  "description": "Tide is a Model-View-Presenter framework for quickly building client-side applications with React and MobX.",
+  "description": "Tide is a rapid application development framework for quickly building client-side applications with React and MobX.",
   "main": "dist/index.js",
   "web": "dist/index.js",
   "author": "Kay Sackey",

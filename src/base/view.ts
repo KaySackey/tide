@@ -1,6 +1,5 @@
 import {RenderingContext} from "./context";
 
-
 export class View extends RenderingContext {
     static displayName = "Tide.View";
 
@@ -9,6 +8,20 @@ export class View extends RenderingContext {
     //     onAct?: (string) => void,
     //     children?: any
     // };
+
+    disposer? = null;
+
+    getChildContext() : any {
+        return {
+            parent: this
+        };
+    }
+
+    componentWillUnmount(){
+        if(this.disposer){
+            this.disposer();
+        }
+    }
 
     /**
      * Pulls a trigger, this should be overridden if you want to do something special.
