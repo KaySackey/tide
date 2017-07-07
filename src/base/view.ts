@@ -3,53 +3,11 @@ import {RenderingContext} from "./context";
 export class View extends RenderingContext {
     static displayName = "Tide.View";
 
-    // todo: add it back so we can force type checkign props?
-    // props: {
-    //     onAct?: (string) => void,
-    //     children?: any
-    // };
-
     disposer? = null;
-
-    getChildContext() : any {
-        return {
-            parent: this
-        };
-    }
 
     componentWillUnmount(){
         if(this.disposer){
             this.disposer();
-        }
-    }
-
-    /**
-     * Pulls a trigger, this should be overridden if you want to do something special.
-     * @param name
-     */
-    onAct(name) {
-        if(this.props.onAct){
-            this.props.onAct(name)
-        }
-        else{
-            this.trigger(name)
-        }
-    }
-
-    /**
-     * Binds onAct with a variable.
-     * The default onAct is simply
-     *
-     *      (name) => this.trigger(name)
-     *
-     * This function can be used to simplify binding triggers repetitively in a view that handles events.
-     * @param {string} name
-     * @returns {function(this:*)}
-     */
-    act(name) {
-        return (event) => {
-            event.preventDefault();
-            this.onAct(name);
         }
     }
 }

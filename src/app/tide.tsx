@@ -18,8 +18,6 @@ export class Tide extends React.Component<any, any>
 
     static displayName = "Tide";
     static childContextTypes = {
-        // Tide Bubbling
-        parent: PropTypes.object,
         // Application specific
         app: PropTypes.object,
         router: PropTypes.object,
@@ -48,7 +46,6 @@ export class Tide extends React.Component<any, any>
         return {
             tide: this.tide_app,
             app: null,           // we could put a fake store that just throws errors here? .... app is defined via the TideWrapper
-            parent: this,           // we could put some kind of logging here thanks to catching all triggers
             router: this.tide_app.router
         };
     }
