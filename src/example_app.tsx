@@ -4,11 +4,11 @@ import {View} from "tide/index";
 import {Link, IndexLink} from "tide/router";
 import {route} from "tide/router/route";
 import {BaseStore} from "tide/model/store";
-import {BasicApp} from "tide/app/conf";
+
 
 /** Views **/
 export class Welcome extends View {
-    static displayName = "Tide.Welcome";
+    static displayName = "TideWelcome";
     props: {
         title: string,
         status: string
@@ -30,7 +30,7 @@ export class Welcome extends View {
 }
 
 export class NotFound extends View {
-    static displayName = "Tide.NotFound";
+    static displayName = "TideNotFound";
     render() {
         return (
           <div>
@@ -86,7 +86,7 @@ export class ExampleLayout extends View {
         // Use getComponent or getComponents on your routes if you want code splitting
         let status     = this.tide.page_state.page_state;
         let route_name = this.tide.page_state.route_name;
-        console.log("[Tide Example] Rendering... ");
+        console.debug("[Tide Example] Rendering... ");
 
         return (
           <div className="l-container">
@@ -129,17 +129,12 @@ class ExampleStore extends BaseStore {
     };
 }
 
-class ExampleApp extends BasicApp {
-    // Nothing here
-}
 
 
 /** Configuration */
 export class AppConf {
     name     = "example";
-    routes   = routes;
     layout   = ExampleLayout;
-    app      = new ExampleApp();
     store    = new ExampleStore();
 
     ready(){

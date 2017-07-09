@@ -95,7 +95,7 @@ export function route(path, handler, name?: string, context?: any): Route {
  *
  * @throws {DispatchError} if the route cannot be validated*
  */
-export function include(path: string, routes: Route[], app_label : (string|null) = null) {
+export function include(path: string, routes: Route[], app_label? : string) {
     for (const route of routes) {
         route.context.app_label = route.context.app_label || app_label;
         route._path = path + route._path;
@@ -108,7 +108,10 @@ export function include(path: string, routes: Route[], app_label : (string|null)
  * Shortcut to rendering a single React Component w/o having to write a controller function
  */
 export function route_component(path: string, react_component: React.ReactNode, name?: string, context: any = {}): Route {
-    let f_render = function (tide, request, params) {
+    // todo: Clarify this is part of Tide, not part of Router itself
+    let f_render = function (tide, route_context) {
+        // request_, and vals_ are all part of the request context
+        let {request, request_, vals_, ...params} = route_context;
         return tide.render(request, react_component, params)
     };
 

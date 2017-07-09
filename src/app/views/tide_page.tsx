@@ -1,50 +1,12 @@
 import {computed} from "mobx";
 import {observer} from "mobx-react";
-import * as PropTypes from 'prop-types';
 import * as React from "react";
 import {TideApp} from "tide/app/tide_app";
-import {InternalError} from "./errors";
-
-@observer
-export class TideWrapper extends React.Component<any, any> {
-    /**
-     * Used by the TidePage to create a context for a displaying the current view in.
-     */
-
-    static childContextTypes = {
-        app: PropTypes.object,
-        store: PropTypes.object
-    };
-
-    static displayName = "Tide.Wrapper";
-
-    static propTypes = {
-        app: PropTypes.object.isRequired,
-        store: PropTypes.object.isRequired,
-        layout_component: PropTypes.node.isRequired
-    };
-
-    props: {
-        app: any,
-        store: any,
-        layout_component: any
-    };
-
-    getChildContext() {
-        return {
-            app: this.props.app,
-            store: this.props.store
-        };
-    }
-
-    render() {
-        return <div>{this.props.layout_component}</div>
-    }
-}
+import {InternalError} from "./basic";
 
 @observer
 export class TidePage extends React.Component<any, any> {
-    static displayName = "Tide.Page";
+    static displayName = "TidePage";
 
     props: {
         tide: TideApp
@@ -107,40 +69,22 @@ export class TidePage extends React.Component<any, any> {
         const page_state = this.page_state;
 
         let route_name = page_state.route_name;
-        let app_label = page_state.app_label;
         let status = page_state.status;
         let view = this.current_view;
         let last_update = page_state.last_update;
+        let layout = page_state.layout;
 
-        console.groupCollapsed(`[Tide][Render] [${status}] ${app_label} / ${route_name}`);
-        console.info(`[Tide][Render] Updated @ ${last_update}`);
-        console.info(`[Tide][Render] Route: ${route_name}`);
-        console.info(`[Tide][Render] App: ${app_label}`);
-        console.info(`[Tide][Render] Status: ${status}`);
-        console.groupEnd();
+        console.debug(`[Tide][Render] [${status}] - ${route_name}  -       Updated @ ${last_update}`);
 
-        if (!route_name || !this.tide.has_app(app_label)) {
+        if (!route_name) {
             return <InternalError/>
         }
 
-        // Get Application Configuration for current view
-        // We'll put store/app in a wrapper at the end so the context
-        // is populated down to the View that our render has returned
-        let app_conf = this.tide.get_app(app_label);
-
-        let app = app_conf.app;
-        let store = app_conf.store;
-        let layout = app_conf.layout;
-
         let children = <div>
             {view || <InternalError/>}
-            {/*{this.tide.dev_mode ? <DevTools /> : ""}*/}
         </div>;
 
         let layout_component = this._create_view(layout, {}, children);
-
-        return <TideWrapper app={app}
-                            store={store}
-                            layout_component={layout_component}/>;
+        return <div>{layout_component}</div>
     }
 }

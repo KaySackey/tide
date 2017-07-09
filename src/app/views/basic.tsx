@@ -2,7 +2,7 @@ import * as React from "react";
 import {IndexLink} from "tide/router";
 
 export class InternalError extends React.Component {
-    static displayName = "Tide.InternalError";
+    static displayName = "TideInternalError";
 
     render() {
         return (
@@ -28,6 +28,14 @@ export class NotFound extends React.Component {
                 <div>Configure one by adding route {code} to one of your applications.</div>
                 <div>Go back to the <IndexLink to="/">home page</IndexLink></div>
             </div>
+        )
+    }
+}
+
+export class BasicLayout extends React.Component {
+    render() {
+        return (
+            <div>{this.props.children}</div>
         )
     }
 }

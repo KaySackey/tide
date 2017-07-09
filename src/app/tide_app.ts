@@ -1,39 +1,61 @@
-import {action, computed, extendObservable} from "mobx";
+import {action, computed, extendObservable, observable} from "mobx";
 import * as React from "react";
 import {ConfigurationError} from "tide/exceptions";
 import {Router} from "tide/router";
 import {bind_all_methods} from "tide/utils";
 
 import {TideDispatcher} from "./dispatcher";
-import {state, ITideUser, ITideState} from "./state";
 import {PageStateStore} from "./page_state";
+import {ITideState, ITideUser, state} from "./state";
+import {BasicLayout} from "./views/basic";
+import {ExistingApplications, RouteList, TideSettings} from "tide/types";
+
+
+export class UserApp {
+    name: string | null;
+    verbose_name: string;
+    layout: React.ComponentType<any>;
+    tide: TideApp;      // will be assigned by tide not constructor
+    routes: RouteList;
+
+    constructor() {
+        this.name = this.name || this.constructor.name;
+        this.verbose_name = this.verbose_name || this.constructor.name;
+        this.layout = BasicLayout;
+    }
+
+    load(data: any): void {
+        // this will be called by Tide *after* all apps are configured
+    }
+}
+
 
 export class TideApp {
-    settings: {
-        routes?: any,
-        apps?: any
-    };
-
     basename: string;
     mode: string;
     dev_mode: boolean;
     initial_data: any;
 
-    _apps: Map<string, any>;
+    settings: TideSettings;
+
+    apps: ExistingApplications;
     _router: Router;
     _view: React.Component<any, any>; // ReactComponent
 
     state: ITideState;
 
+    constructor() {
+        bind_all_methods(this);
+    }
+
     /**
      * @param  {Tide} view - the top level react component
      * @param {object} props - properties given to the view
      */
-    constructor(view, props) {
-        bind_all_methods(this);
-
+    setup(view, props){
         let data = props.initial_data.tide || {};
 
+        this.apps = {} as ExistingApplications;
         this.state = state;
         this.state.user = extendObservable(this.state.user, data.user);
 
@@ -44,7 +66,6 @@ export class TideApp {
         this.dev_mode = props.mode === "development";
 
         this._view = view;
-        this._apps = new Map();
 
         // Setup Router
         if (props.router) {
@@ -59,6 +80,8 @@ export class TideApp {
 
             this._router = new Router(this, router_options)
         }
+
+        return this;
     }
 
     get page_state(): PageStateStore {
@@ -105,40 +128,34 @@ export class TideApp {
      */
     @action
     setup_apps() {
-        this.settings.apps.forEach((AppClass) => {
-            const app = new AppClass();
+        const app_map: Map<string, UserApp> = new Map();
+
+        this.settings.apps.forEach((AppClass: any) => {
+            let app: UserApp = new AppClass();
 
             if (!app.name) {
                 throw new TypeError(
                     `Apps need a name as part of their configuration! Looked inside: ${JSON.stringify(app)}`)
             }
 
-            // Give the application some of its own configured data
-            app.tide = this;
-
-            app.app.store = app.store;
-            app.app.tide = this;
-
-            if (this._apps.has(app.name)) {
+            if (app_map.has(app.name)) {
                 throw new ConfigurationError(`The application named ${app.name} was listed twice.`)
             }
 
-            // Set the completed app in our table
-            this._apps.set(app.name, app);
+            app.tide = this;
+            let initial = this.initial_data[app.name] || {};
+
+            console.debug(`[Tide] Loading ${app.name} with data.... `, initial);
+            app.load(initial);
+
+            app_map.set(app.name, app);
+            this.apps[app.name] = app;
         });
 
         // Add Routes
         this.settings.routes.forEach((route) => {
             this.add_route(route)
         });
-
-        // Now that all the apps are in the listing
-        // Let it complete them complete their initialization
-        this.apps().map(app => {
-            let initial = this.initial_data[app.name] || {};
-            console.log(`[Tide] Initial for ${app.name}`, initial);
-            app.ready(initial)
-        })
     }
 
     add_route(route) {
@@ -152,37 +169,6 @@ export class TideApp {
 
         this.router.set(route);
     }
-
-    /**
-     * Return an application with the given label
-     * @param label
-     * @returns {BasicApp}
-     */
-    get_app(label) {
-        if (!this.has_app(label)) {
-            throw new ReferenceError(`App of name ${label} has not been added to Tide`);
-        }
-
-        return this._apps.get(label);
-    }
-
-    /**
-     * Returns an array of the applications installed
-     * @returns {Array}
-     */
-    apps() {
-        return Array.from(this._apps.values())
-    }
-
-    /**
-     * Returns true if Tide has a registered this application
-     * @param label
-     * @returns {boolean}
-     */
-    has_app(label) {
-        return this._apps.has(label)
-    }
-
 
     /**
      * Set the state of the page state to pending
@@ -256,7 +242,7 @@ export class TideApp {
      *
      *      class MyController{
      *
-     *          show(tide, request, params){
+     *          show(tide, {request,...params}){
      *          // tide is TideController
      *          // request is a RouteMatch
      *          // params is an object with the matched parameters
@@ -277,14 +263,28 @@ export class TideApp {
         const page_state = this.page_state;
 
         // Get the app this route came from
-        let app_label = route.context.app_label || "default";
-        let app_conf = this.get_app(app_label);
+        let app_label = route.context.app_label;
+
+        let layout;
+        if(app_label){
+            let app = this.apps[app_label];
+            if (!app) {
+                throw new ReferenceError(`App of name ${app_label} has not been added to Tide`);
+            }
+            layout = app.layout;
+        }else{
+            layout = this.settings.default_layout;
+        }
+
 
         // Transition to the next state
         page_state
-            .process_transition(route, app_conf, view, data)
+            .process_transition(route, layout, view, data)
             .then((data) => {
                 return this.forceUpdate();
             })
     }
 }
+
+
+export const tide_app : TideApp = new TideApp();

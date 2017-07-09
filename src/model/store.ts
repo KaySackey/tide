@@ -2,7 +2,6 @@ import * as mobx from "mobx";
 import {QueryNotFound} from "tide/exceptions";
 import {bind_all_methods} from "tide/utils";
 import {Query} from "./query";
-
 declare interface IApplicationState {
     _meta: any;
     state: any;

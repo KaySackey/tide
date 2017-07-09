@@ -3,8 +3,9 @@ import "./utils/console.polyfill";
 
 // Components
 export {Tide} from "./app/tide";
-export {View} from "./base/view";
-export {ITideContext} from "./base/context";
+export {View, ITideContext} from "./app/view";
+export {UserApp} from "./app/tide_app";
 
 // Exceptions
 export * from "./exceptions";
+export * from "./types";

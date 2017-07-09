@@ -2,6 +2,7 @@ import {Http} from "tide/requests/http";
 import {QueryError} from "tide/exceptions";
 import {deserialize} from "serializr";
 import {action} from "mobx";
+import {AxiosError} from "axios";
 
 export class Query {
     /**
@@ -104,19 +105,13 @@ export class Query {
         return this.response
     }
 
-    handle_error(error){
-        if ( error.name === "InvalidResponse" && error.response.status === 400 ) {
-            return error.response
-              .json()
-              .then(
-                // Successfully made JSON
-                (json) => { throw new QueryError(this, {error: error, errorResponse: json}) },
-                // Couldn't make JSON
-                (_) => {throw new QueryError(this, {error: error})}
-              )
+    handle_error(error : AxiosError){
+        let response = error.response;
+        let context;
+        if(response && response.status === 400){
+            context = response.data;
         }
-
-        throw new QueryError(this, {error: error})
+        throw new QueryError(this, error, context)
     }
 
     deserialize(json) {

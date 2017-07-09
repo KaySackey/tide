@@ -52,8 +52,8 @@ export class TideDispatcher {
      */
     dispatch(matched_route) {
         let route = matched_route.route;
-        let params = matched_route.params;
         let handler = route.handler;
+
 
         if(this.controller.pending){
             alert("Page is still in a transition. Cannot dispatch a new one.");
@@ -66,7 +66,10 @@ export class TideDispatcher {
 
         // Run dispatch
         runInAction(`Dispatching:  ${route.name}`, () => {
-            handler.call(null, this.controller, matched_route, params)
+            // request_, and vals_ are debugging internals given by CrossroadsJS
+            let { request_, vals_, ...params} = matched_route.params;
+            let context = {request: matched_route, ...params};
+            handler.call(null, this.controller, context)
         });
     }
 }

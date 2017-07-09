@@ -41,7 +41,7 @@ export function create() {
     const config = {
         name: "Tide",
         onlyActions: false,
-        global: true
+        global: false
     };
 
     return remotedev(store, config)

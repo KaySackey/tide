@@ -13,11 +13,15 @@ export class InvalidQuery extends TideError {
 }
 
 export class QueryError extends TideError {
-    context: any;
+    responseData: any;
+    _wrapped: Error;
 
-    constructor(query, context) {
-        super(`An error occurred on ${query.name}. ${context.error.message}`);
-        this.context = context;
+    constructor(query, original_error, responseData) {
+        super(`An error occurred on ${query.name}. ${original_error.message}`);
+
+        this._wrapped = original_error;
+        this.responseData = responseData;
+
         this.name = "QueryError";
     }
 }

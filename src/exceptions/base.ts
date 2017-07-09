@@ -21,16 +21,3 @@ export class TideError extends ExtendableError {
 }
 
 export class ConfigurationError extends TideError { }
-
-export class InvalidResponse extends TideError {
-    response : any;
-    name: string;
-
-    constructor(response) {
-        let status  = response.statusText || response.status;
-        let message = `Status: ${status} on ${response.url}`;
-        super(message);
-        this.response = response;
-        this.name = "InvalidResponse";
-    }
-}

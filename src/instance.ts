@@ -1,0 +1,1 @@
+export {tide_app as tide} from "tide/app/tide_app";

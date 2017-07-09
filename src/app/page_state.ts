@@ -63,9 +63,6 @@ export class PageStateStore {
         return this.page_state.last_update;
     }
 
-    @computed get app_label(){
-        return this.page_state.app_label;
-    }
 
     @computed get status(){
         return this.page_state.status;
@@ -82,13 +79,11 @@ export class PageStateStore {
     /**
      * Transition to a new state
      * @param route
-     * @param app_conf
      * @param view
      * @param data
      */
-    process_transition(route, app_conf, view, data) : Promise<any> {
-        this.page_state.layout     = app_conf.layout;
-        this.page_state.app_label  = app_conf.name;
+    process_transition(route, layout, view, data) : Promise<any> {
+        this.page_state.layout     = layout;
         this.page_state.route_name = route.name;
         this.page_state.view       = view;
         this.page_state.data       = {};
@@ -108,9 +103,6 @@ export class PageStateStore {
               return response;
           }).catch(err => {
               console.error(err);
-
-              debugger;
-
               this.page_state.failure(err);
               throw err;
           });
@@ -129,7 +121,6 @@ class InternalPageState {
     @observable route_name;
     @observable last_update = new Date();
 
-    @observable app_label = null;
     @observable.ref view      = null;
     @observable.ref layout    = null;
 
