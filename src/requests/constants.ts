@@ -4,7 +4,8 @@ Note: A critical assumption made is that the backend speaks JSON so these functi
 export const ContentTypes = {
     json: "application/json",
     html: "text/html",
-    text: "text/plain"
+    text: "text/plain",
+    form: "multipart/form-data"
 };
 
 export const Credentials = {

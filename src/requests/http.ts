@@ -1,11 +1,9 @@
 import axios, {AxiosPromise} from 'axios';
-import {ContentTypes} from "./constants";
+import {tide} from "tide/instance";
 import {path as utils_path} from "tide/utils";
-
-let log_to_console = true;//(process.env.NODE_ENV === 'development');
+import {ContentTypes} from "./constants";
 
 const requests = axios.create({
-    baseURL: 'https://dev.luscious.net:4000/', // todo pull from config?
     timeout: 1000,
     headers: {
         "Content-Type": ContentTypes.json,
@@ -23,7 +21,7 @@ export class Http {
      * @returns {Promise}
      * @throws ReferenceError - If you use a method apart from get/post/put/delete
      */
-     static execute(query): AxiosPromise {
+    static execute(query): AxiosPromise {
         return new Promise((resolve, reject) => {
             try {
                 const {method, name, data, endpoint} = query;
@@ -42,7 +40,7 @@ export class Http {
         })
     }
 
-    static _request(url: string, method: string, name: string, data: any) : AxiosPromise {
+    static _request(url: string, method: string, name: string, data: any): AxiosPromise {
         let fetch_request;
 
         switch (method) {
@@ -91,11 +89,11 @@ export class Http {
     }
 
     static debug_logging(response) {
-        if (log_to_console) {
+        if (tide.dev_mode) {
             console.debug("Request Returned", {
                 // 'ContentType': response.headers.get('content-Type'),
-                'Status'     : response.status,
-                "StatusText" : response.statusText
+                'Status': response.status,
+                "StatusText": response.statusText
             });
         }
 
