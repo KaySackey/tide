@@ -25,7 +25,7 @@ export function humanize_date(input: Date | number) {
     }
 
     const now : Date = new Date();
-    const diff_in_seconds = 1000 * Math.abs(now.getTime() - a_date.getTime());
+    const diff_in_seconds = Math.abs(now.getTime() - a_date.getTime()) / 1000;
 
     // Future Dates disallowed....
     if(diff_in_seconds > 0){
