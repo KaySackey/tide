@@ -26,16 +26,18 @@ export interface ITideUser {
 }
 
 export interface ITideState{
-    messages: mobx.IObservableArray<ITideMessage>;
-    user: ITideUser;
-    page: PageStateStore;
+    messages: mobx.IObservableArray<ITideMessage>
+    user: ITideUser
+    page: PageStateStore
+    settings: any
 }
 
 export function create() {
     const store = observable({
         messages: mobx.observable.array([]) as mobx.IObservableArray<ITideMessage>,
         user: {} as ITideUser,
-        page: new PageStateStore()
+        page: new PageStateStore(),
+        settings: {} as any,
     });
 
     const config = {

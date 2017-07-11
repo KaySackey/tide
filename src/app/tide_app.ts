@@ -57,7 +57,8 @@ export class TideApp {
 
         this.apps = {} as ExistingApplications;
         this.state = state;
-        this.state.user = extendObservable(this.state.user, data.user);
+        this.state.user     = extendObservable(this.state.user, data.user);
+        this.state.settings = data.settings;
 
         this.initial_data = data;
         this.settings = props.settings;
