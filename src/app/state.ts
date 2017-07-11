@@ -1,5 +1,5 @@
 import * as mobx from "mobx";
-import {default as remotedev} from 'mobx-remotedev/lib/dev';
+import * as remotedev from 'mobx-remotedev';
 import {PageStateStore} from "./page_state";
 import {observable} from "mobx";
 
