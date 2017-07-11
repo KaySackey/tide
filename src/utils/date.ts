@@ -14,12 +14,13 @@ const ONE_DAY = ONE_HOUR * 24;
 export function humanize_date(input: Date | number) {
     let a_date : Date;
 
+
     if(!input){
         return "?"
     }
     if(typeof input === "number"){
         // Assume time in seconds
-        a_date = new Date(input)
+        a_date = new Date(input*1000)
     }else{
         a_date = input as Date;
     }
@@ -39,12 +40,12 @@ export function humanize_date(input: Date | number) {
     }
 
     // This year
-    if(a_date.getFullYear() === now.getMonth()){
+    if(a_date.getFullYear() === now.getFullYear()){
         // E.g. Jan 17
         return `${human_date.monthName(a_date)} ${a_date.getDate()}`
     }
 
     // Last year
     // E.g. June 29th, 2016
-    return human_date.prettyPrint();
+    return human_date.prettyPrint(a_date);
 }
