@@ -28,7 +28,7 @@ export function humanize_date(input: Date | number) {
     const diff_in_seconds = Math.abs(now.getTime() - a_date.getTime()) / 1000;
 
     // Future Dates disallowed....
-    if(diff_in_seconds > 0){
+    if(diff_in_seconds < 0){
         return "now"
     }
 
@@ -46,5 +46,5 @@ export function humanize_date(input: Date | number) {
 
     // Last year
     // E.g. June 29th, 2016
-    return human_date.prettyDate();
+    return human_date.prettyPrint();
 }
