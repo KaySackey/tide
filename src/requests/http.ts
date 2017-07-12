@@ -4,7 +4,7 @@ import {path as utils_path} from "tide/utils";
 import {ContentTypes} from "./constants";
 
 const requests = axios.create({
-    timeout: 7000,
+    timeout: 15000,
     headers: {
         "Content-Type": ContentTypes.json,
         "Accept": ContentTypes.json,
