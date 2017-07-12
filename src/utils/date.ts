@@ -15,12 +15,14 @@ export function humanize_date(input: Date | number) {
     let a_date : Date;
 
 
+
     if(!input){
         return "?"
     }
     if(typeof input === "number"){
         // Assume time in seconds
-        a_date = new Date(input*1000)
+        a_date = new Date(input*1000);
+        console.log(input, a_date);
     }else{
         a_date = input as Date;
     }
